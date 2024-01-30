@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.cooksys.socialmedia.dtos.TweetRequestDto;
-import com.cooksys.socialmedia.dtos.TweetResponseDTo;
+import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.mappers.TweetMapper;
 import com.cooksys.socialmedia.repositories.TweetRepository;
@@ -25,7 +25,7 @@ public class TweetServiceImpl implements TweetService {
   private final TweetMapper tweetMapper;
 
   @Override
-  public List<TweetResponseDTo> getAllTweets() {
+  public List<TweetResponseDto> getAllTweets() {
     return tweetMapper.entitiesToDtos(tweetRepository.findAll());
   }
 

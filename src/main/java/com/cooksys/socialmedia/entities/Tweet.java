@@ -35,7 +35,7 @@ public class Tweet {
   @JoinColumn(name = "inReplyTo")
   private Tweet inReplyTo;
   
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "repostOf")
   private Tweet repostOf;
 }

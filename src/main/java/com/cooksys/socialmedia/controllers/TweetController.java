@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cooksys.socialmedia.dtos.TweetResponseDTo;
+import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class TweetController {
 	private final TweetService tweetService;
 	
 	  @GetMapping
-	  public List<TweetResponseDTo> getAllTweets() {
+	  public List<TweetResponseDto> getAllTweets() {
 	    return tweetService.getAllTweets();
 	  }
 

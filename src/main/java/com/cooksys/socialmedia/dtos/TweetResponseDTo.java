@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class TweetResponseDTo {
+public class TweetResponseDto {
 
   private Long id;
 
