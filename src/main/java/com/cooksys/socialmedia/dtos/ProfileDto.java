@@ -1,22 +1,18 @@
-package com.cooksys.socialmedia.entities;
+package com.cooksys.socialmedia.dtos;
 
-import jakarta.annotation.Nonnull;
-import jakarta.persistence.Embeddable;
+import com.cooksys.socialmedia.entities.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Embeddable
 @NoArgsConstructor
 @Data
-public class Profile {
-
+public class ProfileDto {
+  
   private String firstName;
-
+  
   private String lastName;
-
-  @Nonnull
+  
   private String email;
-
+  
   private String phone;
-
 }
