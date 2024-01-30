@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users_table")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -31,8 +32,16 @@ public class User {
     @Embedded
     private Profile profile;
 
-    @Embedded
-    private FollowersFollowing followersFollowing;
+    @OneToMany
+    private List<User> following;
 
+    @OneToMany
+    private List<User> followers;
+
+    @OneToMany
+    private List<User> userLikes;
+
+    @OneToMany
+    private List<User> userMentions;
 
 }
