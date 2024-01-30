@@ -20,12 +20,16 @@ public class Tweet {
   @Id
   @GeneratedValue
   private Long id;
-
+  
+  @ManyToOne
+  @JoinColumn(name = "User_id")
   private User Author;
   
   private Timestamp posted;
   
   private String content;
+  
+  private Boolean deleted;
   
   @OneToOne
   @JoinColumn(name = "inReplyTo")
