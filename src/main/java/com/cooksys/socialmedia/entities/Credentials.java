@@ -1,22 +1,18 @@
 package com.cooksys.socialmedia.entities;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Embeddable
+@AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Profile {
+public class Credentials {
 
-  private String firstName;
+    private String username;
 
-  private String lastName;
-
-  @Nonnull
-  private String email;
-
-  private String phone;
+    private String password;
 
 }
