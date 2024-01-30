@@ -1,6 +1,8 @@
-package com.mysocialmedia.entities;
+package com.cooksys.socialmedia.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 
 @Embeddable

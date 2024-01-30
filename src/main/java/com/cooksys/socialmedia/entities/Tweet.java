@@ -1,10 +1,14 @@
-package com.mysocialmedia.entities;
+package com.cooksys.socialmedia.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+
 import java.sql.Timestamp;
 
 @Entity
 public class Tweet {
+    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,8 +49,4 @@ public class Tweet {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    }}

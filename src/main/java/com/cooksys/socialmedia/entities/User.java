@@ -1,6 +1,8 @@
-package com.mysocialmedia.entities;
+package com.cooksys.socialmedia.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+
 import java.sql.Timestamp;
 
 @Entity
