@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -22,6 +23,7 @@ public class Tweet {
   private Long id;
   
   @ManyToOne
+  @NonNull
   @JoinColumn(name = "User_id")
   private User Author;
   
@@ -32,10 +34,10 @@ public class Tweet {
   private Boolean deleted;
   
   @OneToOne
-  @JoinColumn(name = "inReplyTo")
+  @JoinColumn(name = "Tweet_id")
   private Tweet inReplyTo;
   
   @ManyToOne
-  @JoinColumn(name = "repostOf")
+  @JoinColumn(name = "Tweet_id")
   private Tweet repostOf;
 }
