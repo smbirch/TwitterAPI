@@ -1,9 +1,9 @@
 package com.cooksys.socialmedia.dtos;
 
-import java.sql.Timestamp;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 @NoArgsConstructor
 @Data
@@ -14,7 +14,7 @@ public class TweetResponseDto {
     private UserResponseDto Author;
 
     private Timestamp posted;
-    
+
     private String content;
 
     private TweetResponseDto inReplyTo;

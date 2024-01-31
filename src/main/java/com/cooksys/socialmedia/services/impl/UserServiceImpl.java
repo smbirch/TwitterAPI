@@ -1,14 +1,12 @@
 package com.cooksys.socialmedia.services.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
 import com.cooksys.socialmedia.services.UserService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

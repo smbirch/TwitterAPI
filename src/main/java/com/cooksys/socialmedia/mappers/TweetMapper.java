@@ -8,11 +8,11 @@ import java.util.List;
 
 //import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", uses = { UserMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface TweetMapper {
 
-  TweetResponseDto entityToDto(Tweet entity);
+    TweetResponseDto entityToDto(Tweet entity);
 
-  List<TweetResponseDto> entitiesToDtos(List<Tweet> entities);
+    List<TweetResponseDto> entitiesToDtos(List<Tweet> entities);
 
 }

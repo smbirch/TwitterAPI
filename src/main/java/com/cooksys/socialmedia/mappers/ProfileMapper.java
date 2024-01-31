@@ -11,8 +11,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProfileMapper {
 
-  ProfileDto entityToDto(Profile entity);
+    ProfileDto entityToDto(Profile entity);
 
-  List<ProfileDto> entitiesToDtos(List<Profile> entities);
+    List<ProfileDto> entitiesToDtos(List<Profile> entities);
 
 }

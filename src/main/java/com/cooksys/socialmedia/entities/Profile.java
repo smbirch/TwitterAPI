@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @Data
 public class Profile {
 
-  private String firstName;
+    private String firstName;
 
-  private String lastName;
+    private String lastName;
 
-  @Nonnull
-  private String email;
+    @Nonnull
+    private String email;
 
-  private String phone; 
+    private String phone;
 
 }

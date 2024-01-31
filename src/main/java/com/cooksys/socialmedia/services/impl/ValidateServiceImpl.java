@@ -1,10 +1,8 @@
 package com.cooksys.socialmedia.services.impl;
 
-import org.springframework.stereotype.Service;
-
 import com.cooksys.socialmedia.services.ValidateService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
