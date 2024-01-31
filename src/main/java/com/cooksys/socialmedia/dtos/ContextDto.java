@@ -4,14 +4,12 @@ import java.util.List;
 
 import com.cooksys.socialmedia.entities.Tweet;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ContextResponseDto {
+public class ContextDto {
 
 	  private Tweet target;
 	  	  

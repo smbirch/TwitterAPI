@@ -1,15 +1,21 @@
 package com.cooksys.socialmedia.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.io.Serial;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class NotAuthorizedException extends RuntimeException {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4697954669021325223L;
-	private String message;
+
+	@Serial
+    private static final long serialVersionUID = -5552076667106114422L;
+
+    private String message;
+
 }

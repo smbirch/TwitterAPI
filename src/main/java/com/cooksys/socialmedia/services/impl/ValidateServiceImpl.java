@@ -1,11 +1,13 @@
 package com.cooksys.socialmedia.services.impl;
 
-import com.cooksys.socialmedia.services.ValidateService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import com.cooksys.socialmedia.services.ValidateService;
+
+import lombok.RequiredArgsConstructor;
+
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ValidateServiceImpl implements ValidateService {
     @Override
     public boolean checkForHashtagExistance(String label) {

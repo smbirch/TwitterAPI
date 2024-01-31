@@ -1,22 +1,17 @@
 package com.cooksys.socialmedia.dtos;
 
-import com.cooksys.socialmedia.entities.*;
+import lombok.AllArgsConstructor;
 //import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class TweetRequestDto {
-
-  private Long id;
-
-  private User Author;
   
   private String content;
   
-  private Tweet inReplyTo;
-  
-  private Tweet repostOf;
+  private CredentialsDto credentials;
 
 }

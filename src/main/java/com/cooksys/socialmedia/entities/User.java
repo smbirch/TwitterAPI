@@ -1,30 +1,37 @@
 package com.cooksys.socialmedia.entities;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Timestamp;
-import java.util.List;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user_table")
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @Column(updatable = false)
     @CreationTimestamp
     private Timestamp joined;
 
-    private boolean isDeleted;
+    private boolean deleted = false;
 
     @Embedded
     private Credentials credentials;
@@ -32,16 +39,25 @@ public class User {
     @Embedded
     private Profile profile;
 
-    @OneToMany
-    private List<User> following;
+    @OneToMany(mappedBy = "author")
+    private List<Tweet> tweets;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+            name = "user_likes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tweet_id")
+    )
+    private List<Tweet> likedTweets = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "mentionedUsers")
+    private List<Tweet> mentionedTweets = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "followers_following")
     private List<User> followers;
 
-    @OneToMany
-    private List<User> userLikes;
-
-    @OneToMany
-    private List<User> userMentions;
+    @ManyToMany(mappedBy = "followers")
+    private List<User> following;
 
 }
