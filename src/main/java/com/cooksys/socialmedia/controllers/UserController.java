@@ -40,11 +40,9 @@ public class UserController {
     }
 
     /**
-     * Retrieves a user with the given username. If no such user exists or is deleted,
-     * an error should be sent in lieu of a response.
-     * <p>
-     * Returns:
-     * User
+     * Retrieves a user with the given username. If no such user exists or is deleted, an error should be sent in lieu of a response.
+     *
+     * @return 'User' - The user retrieved with the given username.
      */
     @GetMapping("/@{username}")
     public UserResponseDto getUserByUsername(@PathVariable String username) {

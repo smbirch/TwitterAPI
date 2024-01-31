@@ -36,16 +36,19 @@ public class TweetServiceImpl implements TweetService {
         if (tweet.isDeleted()) {
             throw new NotFoundException("Tweet with ID: " + tweetId + " not found");
         }
+
         // Check if the user has permission to delete the tweet
         if (!tweet.getAuthor().getCredentials().getUsername().equals(credentials.getUsername())) {
             throw new NotAuthorizedException("Unauthorized to delete tweet with ID: " + tweetId);
         }
+
         // Set soft delete and save the new state
         tweet.setDeleted(true);
         tweetRepository.save(tweet);
 
         return tweetMapper.entityToDto(tweet);
-
     }
+
+
 
 }
