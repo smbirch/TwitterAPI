@@ -13,6 +13,8 @@ import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.services.HashtagService;
 
+import jakarta.persistence.Entity;
+
 
 @RestController
 @RequestMapping("/tags")
