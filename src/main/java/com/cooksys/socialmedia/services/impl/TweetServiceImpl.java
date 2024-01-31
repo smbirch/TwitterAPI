@@ -1,6 +1,7 @@
 package com.cooksys.socialmedia.services.impl;
 
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
+import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.mappers.TweetMapper;
 import com.cooksys.socialmedia.repositories.TweetRepository;
 import com.cooksys.socialmedia.services.TweetService;
@@ -18,7 +19,9 @@ public class TweetServiceImpl implements TweetService {
 
   @Override
   public List<TweetResponseDto> getAllTweets() {
-    return tweetMapper.entitiesToDtos(tweetRepository.findAll());
+    List<Tweet> nonDeletedTweets = tweetRepository.findByDeletedFalse();
+
+    return tweetMapper.entitiesToDtos(nonDeletedTweets);
   }
 
 }
