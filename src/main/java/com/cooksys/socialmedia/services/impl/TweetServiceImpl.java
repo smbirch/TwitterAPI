@@ -19,9 +19,10 @@ public class TweetServiceImpl implements TweetService {
 
   @Override
   public List<TweetResponseDto> getAllTweets() {
-    List<Tweet> nonDeletedTweets = tweetRepository.findByDeletedFalse();
+    // Fetch only non-deleted tweets in reverse chronological order
+    List<Tweet> nonDeletedTweets = tweetRepository.findByDeletedFalseOrderByPostedDesc();
 
-    return tweetMapper.entitiesToDtos(nonDeletedTweets);
-  }
+    // Map the non-deleted tweets to DTOs
+    return tweetMapper.entitiesToDtos(nonDeletedTweets);  }
 
 }
