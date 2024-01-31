@@ -2,6 +2,7 @@ package com.cooksys.socialmedia.controllers;
 
 import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
+import com.cooksys.socialmedia.dtos.UserResponseDto;
 import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
 import com.cooksys.socialmedia.services.TweetService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,19 @@ public class TweetController {
     @GetMapping
     public List<TweetResponseDto> getAllTweets() {
         return tweetService.getAllTweets();
+    }
+
+    /**
+     * Retrieves the users mentioned in the tweet with the given id.
+     * If that tweet is deleted or otherwise doesn't exist, an error should be sent in lieu of a response.
+     * Deleted users should be excluded from the response.
+     * IMPORTANT: Remember that tags and mentions must be parsed by the server!
+     *
+     * @return An array of 'User' objects representing the users mentioned in the tweet.
+     */
+    @GetMapping("/{id}/mentions")
+    public List<UserResponseDto> getUsersMentionedByTweetId(@PathVariable Long id) {
+        return tweetService.getUsersMentionedByTweetId(id);
     }
 
     /**
