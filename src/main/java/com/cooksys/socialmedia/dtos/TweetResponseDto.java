@@ -1,7 +1,7 @@
 package com.cooksys.socialmedia.dtos;
 
-import com.cooksys.socialmedia.entities.Tweet;
-import com.cooksys.socialmedia.entities.User;
+import java.sql.Timestamp;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,12 +11,14 @@ public class TweetResponseDto {
 
     private Long id;
 
-    private User Author;
+    private UserResponseDto Author;
 
+    private Timestamp posted;
+    
     private String content;
 
-    private Tweet inReplyTo;
+    private TweetResponseDto inReplyTo;
 
-    private Tweet repostOf;
+    private TweetResponseDto repostOf;
 
 }

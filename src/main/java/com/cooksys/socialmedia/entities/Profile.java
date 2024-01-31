@@ -17,6 +17,6 @@ public class Profile {
   @Nonnull
   private String email;
 
-  private String phone;
+  private String phone; 
 
 }

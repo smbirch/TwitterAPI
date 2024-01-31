@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
+import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.entities.Credentials;
 	
 	@Mapper(componentModel = "spring")
 	public interface CredentialsMapper {
 
-	  CredentialsRequestDto entityToDto(Credentials entity);
+	  CredentialsDto entityToDto(Credentials entity);
 
-	  List<CredentialsRequestDto> entitiesToDtos(List<Credentials> entities);
+	  List<CredentialsDto> entitiesToDtos(List<Credentials> entities);
 	}

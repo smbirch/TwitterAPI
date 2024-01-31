@@ -13,16 +13,14 @@ import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.services.HashtagService;
 
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/tags")
 public class HashtagController {
 
     private final HashtagService hashtagService;
-
-    public HashtagController(HashtagService hashtagService) {
-        this.hashtagService = hashtagService;
-    }
 
     @GetMapping
     public List<HashtagResponseDto> retrieveAllTags() {
