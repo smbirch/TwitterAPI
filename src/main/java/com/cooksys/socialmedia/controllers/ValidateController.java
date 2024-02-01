@@ -25,7 +25,7 @@ public class ValidateController {
 
     // Checks whether a given username exists.
     @GetMapping("/username/exists/@{username}")
-    public boolean checkforUsernameExistance(@PathVariable String username) {
+    public boolean checkforUsernameExistance(@PathVariable("username") String username) {
         return validateService.checkForUsernameExistance(username);
     }
 
