@@ -12,6 +12,8 @@ import com.cooksys.socialmedia.dtos.ProfileDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
+import com.cooksys.socialmedia.mappers.HashtagMapper;
+import com.cooksys.socialmedia.repositories.HashtagRepository;
 import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.entities.User;
 import com.cooksys.socialmedia.exceptions.BadRequestException;
@@ -35,10 +37,10 @@ public class UserServiceImpl implements UserService {
 	private final TweetRepository tweetRepository;
 	private final TweetMapper tweetMapper;
 	private final CredentialsMapper credentialsMapper;
-	
+  
     @Override
     public List<UserResponseDto> getAllUsers() {
-        return null;
+    		return userMapper.entitiesToDtos(userRepository.findAll());
     }
 
     @Override
