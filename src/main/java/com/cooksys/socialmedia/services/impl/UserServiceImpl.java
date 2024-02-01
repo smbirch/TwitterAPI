@@ -151,7 +151,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.entitiesToDtos(followersSafeCopy);
 
     }
-}
     
     @Override
     public List<TweetResponseDto> getFeed(String username){
