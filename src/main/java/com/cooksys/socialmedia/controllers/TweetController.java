@@ -51,7 +51,7 @@ public class TweetController {
      * a way to keep track of "deleted" tweets so that even if a tweet is deleted, data with
      * relationships to it (like replies and reposts) are still intact.
      *
-     * @param id     The unique identifier of the tweet to be deleted.
+     * @param id          The unique identifier of the tweet to be deleted.
      * @param credentials The credentials of the user attempting to delete the tweet.
      * @return A response containing the tweet data prior to deletion if the tweet is successfully
      * deleted; otherwise, an error response.
@@ -62,27 +62,27 @@ public class TweetController {
     public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody CredentialsDto credentials) {
         return tweetService.deleteTweetById(id, credentials);
     }
-	
-	@GetMapping("/{id}")
-	public TweetResponseDto getTweetById(@PathVariable("id") Long id) {
-		return tweetService.getTweetById(id);
-		
-	}
-	
-	@GetMapping("/{id}/reposts")
-	public List<TweetResponseDto> getRepostsById(@PathVariable("id") Long id){
-		return tweetService.getRepostsById(id);
-	}
-	
-	@GetMapping("/{id}/likes")
-	public List<UserResponseDto> getLikesById(@PathVariable("id") Long id){
-		return tweetService.getLikesById(id);
-	}
-	
-	@PostMapping("/{id}/reply")
-	public TweetResponseDto createReply(@PathVariable("id") Long id, @RequestBody TweetRequestDto tweetRequest) {
-		return tweetService.createReply(id, tweetRequest);
-	}
+
+    @GetMapping("/{id}")
+    public TweetResponseDto getTweetById(@PathVariable("id") Long id) {
+        return tweetService.getTweetById(id);
+
+    }
+
+    @GetMapping("/{id}/reposts")
+    public List<TweetResponseDto> getRepostsById(@PathVariable("id") Long id) {
+        return tweetService.getRepostsById(id);
+    }
+
+    @GetMapping("/{id}/likes")
+    public List<UserResponseDto> getLikesById(@PathVariable("id") Long id) {
+        return tweetService.getLikesById(id);
+    }
+
+    @PostMapping("/{id}/reply")
+    public TweetResponseDto createReply(@PathVariable("id") Long id, @RequestBody TweetRequestDto tweetRequest) {
+        return tweetService.createReply(id, tweetRequest);
+    }
 
     @PostMapping("/{id}/repost")
     public TweetResponseDto createRepost(@PathVariable Long id, @RequestBody Credentials credentialsDto) {

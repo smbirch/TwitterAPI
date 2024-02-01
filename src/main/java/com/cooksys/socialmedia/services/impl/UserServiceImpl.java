@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
         User current = new User();
         List<TweetResponseDto> tweets = new ArrayList<>();
         for (User u : userRepository.findAll()) {
-            if (userMapper.entityToDto(u).getUsername().equals(username) && u.isDeleted() == false) {
+            if (userMapper.entityToDto(u).getUsername().equals(username) && !u.isDeleted()) {
                 current = u;
             }
         }
@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
         User current = new User();
         List<UserResponseDto> users = new ArrayList<>();
         for (User u : userRepository.findAll()) {
-            if (userMapper.entityToDto(u).getUsername().equals(username) && u.isDeleted() == false) {
+            if (userMapper.entityToDto(u).getUsername().equals(username) && !u.isDeleted()) {
                 current = u;
             }
         }

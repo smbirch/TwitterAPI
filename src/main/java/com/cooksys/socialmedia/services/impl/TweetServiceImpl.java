@@ -120,7 +120,7 @@ public class TweetServiceImpl implements TweetService {
         List<TweetResponseDto> repostList = new ArrayList<>();
 
         for (Tweet t : finall.getReposts()) {
-            if (t.isDeleted() == false) {
+            if (!t.isDeleted()) {
                 repostList.add(tweetMapper.entityToDto(t));
             }
         }
@@ -141,7 +141,7 @@ public class TweetServiceImpl implements TweetService {
         List<UserResponseDto> userList = new ArrayList<>();
 
         for (User u : finall.getLikedByUsers()) {
-            if (u.isDeleted() == false) {
+            if (!u.isDeleted()) {
                 userList.add(userMapper.entityToDto(u));
             }
         }

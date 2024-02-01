@@ -109,14 +109,15 @@ public class UserController {
     public UserResponseDto unfollowUser(@RequestBody UserRequestDto userToUnfollow) {
         return userService.unfollowUser(userToUnfollow);
     }
-    
+
     @GetMapping("/@{username}/feed")
     public List<TweetResponseDto> getFeed(@PathVariable("username") String username) {
-    	return userService.getFeed(username);
+        return userService.getFeed(username);
     }
+
     @GetMapping("/@{username}/followers")
     public List<UserResponseDto> getFollowers(@PathVariable("username") String username) {
-    	return userService.getFollowers(username);
+        return userService.getFollowers(username);
     }
 
     /**
@@ -126,7 +127,7 @@ public class UserController {
      *
      * @param username The username of the user for whom to retrieve the followed users.
      * @return A list of active users followed by the specified user.
-     *         The response is in the form of a List of User objects.
+     * The response is in the form of a List of User objects.
      * @throws NotFoundException If no active user is found with the given username.
      */
     @GetMapping("/@{username}/following")
@@ -138,7 +139,7 @@ public class UserController {
      * Retrieves all (non-deleted) tweets authored by the user with the given username.
      * This includes simple tweets, reposts, and replies. The tweets should appear in reverse-chronological order.
      * If no active user with that username exists (deleted or never created), an error should be sent in lieu of a response.
-     *
+     * <p>
      * Response:
      * ['Tweet']
      */
