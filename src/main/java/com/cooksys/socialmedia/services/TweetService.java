@@ -1,6 +1,8 @@
 package com.cooksys.socialmedia.services;
 
 import com.cooksys.socialmedia.dtos.CredentialsDto;
+import java.util.List;
+import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
 
@@ -15,4 +17,11 @@ public interface TweetService {
 
     List<UserResponseDto> getUsersMentionedByTweetId(Long id);
 
+TweetResponseDto getTweetById(Long id);
+
+List<TweetResponseDto> getRepostsById(Long id);
+
+List<UserResponseDto> getLikesById(Long id);
+
+TweetResponseDto createReply(Long id, TweetRequestDto tweetRequest);
 }

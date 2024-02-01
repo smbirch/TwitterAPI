@@ -25,8 +25,8 @@ public class HashtagController {
     }
 
     @GetMapping("/{label}")
-    public List<TweetResponseDto> retrieveTweetsBylabel(@PathVariable String label) {
-        return hashtagService.getTweetsByTag(label);
+    public List<TweetResponseDto> retrieveTweetsBylabel(@PathVariable("label") String label) {	
+    		return hashtagService.getTweetsByTag(label);
     }
 
 
