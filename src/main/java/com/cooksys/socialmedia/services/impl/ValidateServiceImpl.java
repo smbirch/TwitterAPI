@@ -6,7 +6,6 @@ import com.cooksys.socialmedia.entities.User;
 import com.cooksys.socialmedia.mappers.UserMapper;
 import com.cooksys.socialmedia.repositories.UserRepository;
 import com.cooksys.socialmedia.services.ValidateService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service

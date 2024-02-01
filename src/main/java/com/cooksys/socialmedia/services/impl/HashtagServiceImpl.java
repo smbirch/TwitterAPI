@@ -5,9 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.stereotype.Service;
-
 import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.entities.Hashtag;
@@ -18,13 +16,15 @@ import com.cooksys.socialmedia.mappers.TweetMapper;
 import com.cooksys.socialmedia.repositories.HashtagRepository;
 import com.cooksys.socialmedia.repositories.TweetRepository;
 import com.cooksys.socialmedia.services.HashtagService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class HashtagServiceImpl implements HashtagService {
-	
+  
 	private final HashtagRepository hashtagRepository;
 	private final HashtagMapper hashtagMapper;
 	private final TweetRepository tweetRepository;
@@ -36,7 +36,7 @@ public class HashtagServiceImpl implements HashtagService {
 	}
 	
 	@Override
-	public List<TweetResponseDto> getTweetsByTag(String label) throws NotFoundException{
+	public List<TweetResponseDto> getTweetsByTag(String label) {
 		
 		List<Hashtag> hashList = hashtagRepository.findAll();
 		

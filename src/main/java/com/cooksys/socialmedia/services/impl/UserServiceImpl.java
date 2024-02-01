@@ -1,11 +1,5 @@
 package com.cooksys.socialmedia.services.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.ProfileDto;
@@ -25,19 +19,30 @@ import com.cooksys.socialmedia.mappers.UserMapper;
 import com.cooksys.socialmedia.repositories.TweetRepository;
 import com.cooksys.socialmedia.repositories.UserRepository;
 import com.cooksys.socialmedia.services.UserService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-	
+
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
 	private final TweetRepository tweetRepository;
 	private final TweetMapper tweetMapper;
 	private final CredentialsMapper credentialsMapper;
-  
+
+  private User getUserHelper(String username) {
+        Optional<User> userToCheckFor = userRepository.findByCredentials_Username(username);
+
+        if (userToCheckFor.isEmpty() || userToCheckFor.get().isDeleted()) {
+            throw new NotFoundException("No user found with username: '" + username + "'");
+        }
+        return userToCheckFor.get();
+    }
+
     @Override
     public List<UserResponseDto> getAllUsers() {
     		return userMapper.entitiesToDtos(userRepository.findAll());
@@ -77,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserByUsername(String username) {
-        return null;
+        return userMapper.entityToDto(getUserHelper(username));
     }
 
     @Override
@@ -121,6 +126,32 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto unfollowUser(UserRequestDto userToUnfollow) {
         return null;
     }
+
+    @Override
+    public List<TweetResponseDto> getTweetsByUsername(String username) {
+        User thisUser = getUserHelper(username);
+        List<Tweet> userTweets = thisUser.getTweets();
+        if (userTweets.isEmpty()) {
+            throw new NotFoundException("This user has no tweets!");
+        }
+        userTweets.sort(Comparator.comparing(Tweet::getPosted).reversed());
+
+        return tweetMapper.entitiesToDtos(userTweets);
+
+    }
+
+    @Override
+    public List<UserResponseDto> getFollowing(String username) {
+        User thisUser = getUserHelper(username);
+        List<User> followers = thisUser.getFollowers();
+        List<User> followersSafeCopy = new ArrayList<>(followers);
+
+        followersSafeCopy.removeIf(User::isDeleted);
+
+        return userMapper.entitiesToDtos(followersSafeCopy);
+
+    }
+}
     
     @Override
     public List<TweetResponseDto> getFeed(String username){

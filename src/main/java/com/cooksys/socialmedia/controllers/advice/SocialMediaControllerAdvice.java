@@ -1,17 +1,15 @@
 package com.cooksys.socialmedia.controllers.advice;
 
+import com.cooksys.socialmedia.dtos.ErrorDto;
+import com.cooksys.socialmedia.exceptions.BadRequestException;
+import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
+import com.cooksys.socialmedia.exceptions.NotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import com.cooksys.socialmedia.dtos.ErrorDto;
-import com.cooksys.socialmedia.exceptions.BadRequestException;
-import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
-import com.cooksys.socialmedia.exceptions.NotFoundException;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice(basePackages = {"com.cooksys.socialmedia.controllers"})
 @ResponseBody
