@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
 import com.cooksys.socialmedia.services.TweetService;
@@ -39,6 +42,11 @@ public class TweetController {
 	@GetMapping("/{id}/likes")
 	public List<UserResponseDto> getLikesById(@PathVariable("id") Long id){
 		return tweetService.getLikesById(id);
+	}
+	
+	@PostMapping("{id}/reply")
+	public TweetResponseDto createReply(@PathVariable("id") Long id, @RequestBody TweetRequestDto tweetRequest) {
+		return tweetService.createReply(id, tweetRequest);
 	}
 
 
