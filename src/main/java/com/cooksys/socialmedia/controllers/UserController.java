@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
@@ -96,8 +97,8 @@ public class UserController {
      * 'User'
      */
     @DeleteMapping("/@{username}")
-    public UserResponseDto deleteUser(@PathVariable String username) {
-        return userService.deleteUserByUsername(username);
+    public UserResponseDto deleteUser(@PathVariable("username") String username, @RequestBody CredentialsDto credentials) {
+        return userService.deleteUserByUsername(username, credentials);
     }
 
     /**
