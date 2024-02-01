@@ -6,8 +6,6 @@ import com.cooksys.socialmedia.dtos.UserResponseDto;
 
 import java.util.List;
 
-//import javassist.NotFoundException;
-
 public interface TweetService {
 
     List<TweetResponseDto> getAllTweets();
@@ -16,4 +14,5 @@ public interface TweetService {
     TweetResponseDto deleteTweetById(Long tweetId, CredentialsDto credentials);
 
     List<UserResponseDto> getUsersMentionedByTweetId(Long id);
+
 }

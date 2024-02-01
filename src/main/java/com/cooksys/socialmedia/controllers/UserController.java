@@ -1,7 +1,9 @@
 package com.cooksys.socialmedia.controllers;
 
+import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
+import com.cooksys.socialmedia.services.TweetService;
 import com.cooksys.socialmedia.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final TweetService tweetService;
 
 
     @GetMapping
@@ -117,6 +120,20 @@ public class UserController {
     @PostMapping("/@{username}/unfollow")
     public UserResponseDto unfollowUser(@RequestBody UserRequestDto userToUnfollow) {
         return userService.unfollowUser(userToUnfollow);
+    }
+
+    /**
+     * Retrieves all (non-deleted) tweets authored by the user with the given username.
+     * This includes simple tweets, reposts, and replies. The tweets should appear in reverse-chronological order.
+     * If no active user with that username exists (deleted or never created), an error should be sent in lieu of a response.
+     *
+     * Response:
+     * ['Tweet']
+     */
+
+    @GetMapping("/@{username}/tweets")
+    public List<TweetResponseDto> getTweetsByUsername(@PathVariable String username) {
+        return userService.getTweetsByUsername(username);
     }
 
 }

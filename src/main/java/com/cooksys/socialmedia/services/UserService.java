@@ -1,5 +1,6 @@
 package com.cooksys.socialmedia.services;
 
+import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
 
@@ -19,4 +20,6 @@ public interface UserService {
     UserResponseDto followUser(UserRequestDto usertoFollow);
 
     UserResponseDto unfollowUser(UserRequestDto userToUnfollow);
+
+    List<TweetResponseDto> getTweetsByUsername(String username);
 }

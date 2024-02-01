@@ -78,5 +78,4 @@ public class TweetServiceImpl implements TweetService {
         return userMapper.entitiesToDtos(mentionedUsersNotDeleted);
     }
 
-
 }
