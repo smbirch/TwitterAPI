@@ -13,10 +13,7 @@ import com.cooksys.socialmedia.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -70,7 +67,6 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    // TODO: Maybe create a helper method that gets a User and returns it. DRY
     @Override
     public List<TweetResponseDto> getTweetsByUsername(String username) {
         User thisUser = getUserHelper(username);
@@ -87,13 +83,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDto> getFollowing(String username) {
         User thisUser = getUserHelper(username);
-        ArrayList<User> followers = (ArrayList<User>) thisUser.getFollowers();
-        for (User user : followers) {
-            if (user.isDeleted()) {
-                followers.remove(user);
-            }
-        }
-        return userMapper.entitiesToDtos(followers);
+        List<User> followers = thisUser.getFollowers();
+        List<User> followersSafeCopy = new ArrayList<>(followers);
+
+        followersSafeCopy.removeIf(User::isDeleted);
+
+        return userMapper.entitiesToDtos(followersSafeCopy);
 
     }
 }
