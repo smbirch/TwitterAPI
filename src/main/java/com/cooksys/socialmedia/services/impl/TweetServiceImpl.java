@@ -193,7 +193,7 @@ public class TweetServiceImpl implements TweetService {
         Tweet newTweet = new Tweet();
         newTweet.setAuthor(tweet.getAuthor());
         newTweet.setRepostOf(tweet);
-        
+
         return tweetMapper.entityToDto((tweetRepository.saveAndFlush(newTweet)));
     }
 }
