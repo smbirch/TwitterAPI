@@ -3,17 +3,22 @@ package com.cooksys.socialmedia.controllers;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
+import com.cooksys.socialmedia.dtos.UserResponseDto;
 import com.cooksys.socialmedia.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/Tweet")
+@RequestMapping("/tweets")
 public class TweetController {
 
 	private final TweetService tweetService;
@@ -22,6 +27,27 @@ public class TweetController {
 	  public List<TweetResponseDto> getAllTweets() {
 	    return tweetService.getAllTweets();
 	  }
+	
+	@GetMapping("/{id}")
+	public TweetResponseDto getTweetById(@PathVariable("id") Long id) {
+		return tweetService.getTweetById(id);
+		
+	}
+	
+	@GetMapping("/{id}/reposts")
+	public List<TweetResponseDto> getRepostsById(@PathVariable("id") Long id){
+		return tweetService.getRepostsById(id);
+	}
+	
+	@GetMapping("/{id}/likes")
+	public List<UserResponseDto> getLikesById(@PathVariable("id") Long id){
+		return tweetService.getLikesById(id);
+	}
+	
+	@PostMapping("{id}/reply")
+	public TweetResponseDto createReply(@PathVariable("id") Long id, @RequestBody TweetRequestDto tweetRequest) {
+		return tweetService.createReply(id, tweetRequest);
+	}
 
 
 }
