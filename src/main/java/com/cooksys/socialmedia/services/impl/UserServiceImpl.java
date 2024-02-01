@@ -1,13 +1,6 @@
 package com.cooksys.socialmedia.services.impl;
 
-import org.springframework.stereotype.Service;
-import com.cooksys.socialmedia.dtos.CredentialsDto;
-import com.cooksys.socialmedia.dtos.ProfileDto;
-import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.dtos.UserRequestDto;
-import com.cooksys.socialmedia.dtos.UserResponseDto;
-import com.cooksys.socialmedia.mappers.HashtagMapper;
-import com.cooksys.socialmedia.repositories.HashtagRepository;
+import com.cooksys.socialmedia.dtos.*;
 import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.entities.User;
 import com.cooksys.socialmedia.exceptions.BadRequestException;
@@ -56,7 +49,7 @@ public class UserServiceImpl implements UserService {
       
       for(User use: userRepository.findAll()) {
     	  if(use.getCredentials().getUsername().equals(credentials.getUsername())) {
-    		  if(use.isDeleted() == true) {
+    		  if(use.isDeleted()) {
     			  use.setDeleted(false);
     			  userRepository.flush();
     			  return userMapper.entityToDto(use);
@@ -94,7 +87,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto deleteUserByUsername(String username, CredentialsDto credentials) {
     	User current = new User();
     	for(User u: userRepository.findAll()) {
-    		if(userMapper.entityToDto(u).getUsername().equals(username) && u.isDeleted() == false) {
+    		if(userMapper.entityToDto(u).getUsername().equals(username) && !u.isDeleted()) {
     			current = u;
     		}
     	}
@@ -151,7 +144,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.entitiesToDtos(followersSafeCopy);
 
     }
-}
     
     @Override
     public List<TweetResponseDto> getFeed(String username){

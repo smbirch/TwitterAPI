@@ -1,15 +1,11 @@
 package com.cooksys.socialmedia.controllers;
 
 import com.cooksys.socialmedia.dtos.CredentialsDto;
+import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
+import com.cooksys.socialmedia.entities.Credentials;
 import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.cooksys.socialmedia.services.TweetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -83,10 +79,15 @@ public class TweetController {
 		return tweetService.getLikesById(id);
 	}
 	
-	@PostMapping("{id}/reply")
+	@PostMapping("/{id}/reply")
 	public TweetResponseDto createReply(@PathVariable("id") Long id, @RequestBody TweetRequestDto tweetRequest) {
 		return tweetService.createReply(id, tweetRequest);
 	}
+
+    @PostMapping("/{id}/repost")
+    public TweetResponseDto createRepost(@PathVariable Long id, @RequestBody Credentials credentialsDto) {
+        return tweetService.createRepost(id, credentialsDto);
+    }
 
 
 }
