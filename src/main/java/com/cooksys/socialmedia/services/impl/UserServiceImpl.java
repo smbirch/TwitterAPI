@@ -13,6 +13,7 @@ import com.cooksys.socialmedia.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,15 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final TweetMapper tweetMapper;
+
+    private User getUserHelper(String username) {
+        Optional<User> userToCheckFor = userRepository.findByCredentials_Username(username);
+
+        if (userToCheckFor.isEmpty() || userToCheckFor.get().isDeleted()) {
+            throw new NotFoundException("No user found with username: '" + username + "'");
+        }
+        return userToCheckFor.get();
+    }
 
     @Override
     public List<UserResponseDto> getAllUsers() {
@@ -37,12 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserByUsername(String username) {
-        Optional<User> userToCheckFor = userRepository.findByCredentials_Username(username);
-
-        if (userToCheckFor.isEmpty() || userToCheckFor.get().isDeleted()) {
-            throw new NotFoundException("No user found with username: '" + username + "'");
-        }
-        return userMapper.entityToDto(userToCheckFor.get());
+        return userMapper.entityToDto(getUserHelper(username));
     }
 
     @Override
@@ -68,18 +73,27 @@ public class UserServiceImpl implements UserService {
     // TODO: Maybe create a helper method that gets a User and returns it. DRY
     @Override
     public List<TweetResponseDto> getTweetsByUsername(String username) {
-        Optional<User> userToCheckFor = userRepository.findByCredentials_Username(username);
-
-        if (userToCheckFor.isEmpty() || userToCheckFor.get().isDeleted()) {
-            throw new NotFoundException("No user found with username: '" + username + "'");
-        }
-        List<Tweet> userTweets = userToCheckFor.get().getTweets();
+        User thisUser = getUserHelper(username);
+        List<Tweet> userTweets = thisUser.getTweets();
         if (userTweets.isEmpty()) {
             throw new NotFoundException("This user has no tweets!");
         }
         userTweets.sort(Comparator.comparing(Tweet::getPosted).reversed());
 
         return tweetMapper.entitiesToDtos(userTweets);
+
+    }
+
+    @Override
+    public List<UserResponseDto> getFollowing(String username) {
+        User thisUser = getUserHelper(username);
+        ArrayList<User> followers = (ArrayList<User>) thisUser.getFollowers();
+        for (User user : followers) {
+            if (user.isDeleted()) {
+                followers.remove(user);
+            }
+        }
+        return userMapper.entitiesToDtos(followers);
 
     }
 }

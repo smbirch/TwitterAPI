@@ -22,4 +22,6 @@ public interface UserService {
     UserResponseDto unfollowUser(UserRequestDto userToUnfollow);
 
     List<TweetResponseDto> getTweetsByUsername(String username);
+
+    List<UserResponseDto> getFollowing(String username);
 }

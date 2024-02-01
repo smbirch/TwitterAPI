@@ -3,6 +3,7 @@ package com.cooksys.socialmedia.controllers;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
+import com.cooksys.socialmedia.exceptions.NotFoundException;
 import com.cooksys.socialmedia.services.TweetService;
 import com.cooksys.socialmedia.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -120,6 +121,21 @@ public class UserController {
     @PostMapping("/@{username}/unfollow")
     public UserResponseDto unfollowUser(@RequestBody UserRequestDto userToUnfollow) {
         return userService.unfollowUser(userToUnfollow);
+    }
+
+    /**
+     * Retrieves the users followed by the user with the given username.
+     * Only active users should be included in the response.
+     * If no active user with the given username exists, an error should be sent in lieu of a response.
+     *
+     * @param username The username of the user for whom to retrieve the followed users.
+     * @return A list of active users followed by the specified user.
+     *         The response is in the form of a List of User objects.
+     * @throws NotFoundException If no active user is found with the given username.
+     */
+    @GetMapping("/@{username}/following")
+    public List<UserResponseDto> getFollowing(@PathVariable String username) {
+        return userService.getFollowing(username);
     }
 
     /**

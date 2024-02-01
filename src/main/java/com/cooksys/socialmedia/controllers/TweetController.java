@@ -49,7 +49,7 @@ public class TweetController {
      * a way to keep track of "deleted" tweets so that even if a tweet is deleted, data with
      * relationships to it (like replies and reposts) are still intact.
      *
-     * @param tweetId     The unique identifier of the tweet to be deleted.
+     * @param id     The unique identifier of the tweet to be deleted.
      * @param credentials The credentials of the user attempting to delete the tweet.
      * @return A response containing the tweet data prior to deletion if the tweet is successfully
      * deleted; otherwise, an error response.
