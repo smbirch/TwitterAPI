@@ -165,5 +165,10 @@ public class UserController {
     public void followUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto) {
         userService.followUser(username, credentialsDto);
     }
+    
+    @GetMapping("/@{username}/mentions")
+    public List<TweetResponseDto> getTweetsByMentions(@PathVariable("username") String username) {
+        return tweetService.getTweetByUserMentions(username);
+    }
 
 }
