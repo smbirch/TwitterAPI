@@ -311,7 +311,7 @@ public class TweetServiceImpl implements TweetService {
   	System.out.println(credentials.getUsername());
  	System.out.println(dtoCredentials.getPassword());
   	System.out.println(credentials.getPassword());
-  	if(!credentials.getUsername().equals(dtoCredentials.getUsername())  ||  !credentials.getPassword().equals(dtoCredentials.getPassword())) {
+  	if(credentials.getUsername() != dtoCredentials.getUsername()  ||  !credentials.getPassword().equals(dtoCredentials.getPassword())) {
   		// compare two credentials 
  		throw new NotAuthorizedException("Credentials are not correct.");
   	}

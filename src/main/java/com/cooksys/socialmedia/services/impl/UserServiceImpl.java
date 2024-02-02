@@ -116,8 +116,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto unfollowUser(UserRequestDto userToUnfollow) {
-        return null;
+    public void unfollowUser(String username, CredentialsDto userToUnfollow) {
+        List<User> userList = userRepository.findAll();
+        User current = new User();
+        
+        for(User u: userList) {
+        	if(credentialsMapper.entityToDto(u.getCredentials()).equals(userToUnfollow) && u.isDeleted() == false) {
+        		current = u;
+        	}
+        }
+        
+        if(current.getCredentials() == null) {
+        	throw new NotFoundException(" Credentials do not match. ");
+        }
+    	
+        User toUnfollow = userMapper.responseDtoToEntity(getUserByUsername(username));
+        List<User> following = current.getFollowing();
+        if(following != null && following.contains(toUnfollow)) {
+        	following.remove(toUnfollow);
+        }
+        current.setFollowing(following);
+        List<User> followers = toUnfollow.getFollowers();
+        if(followers != null && followers.contains(current)) {
+        	followers.remove(current);
+        }
+        toUnfollow.setFollowers(followers);
+        
+        userRepository.flush();
+        
+    	
     }
 
     @Override
