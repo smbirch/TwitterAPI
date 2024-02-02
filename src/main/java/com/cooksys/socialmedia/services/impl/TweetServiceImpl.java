@@ -2,15 +2,7 @@ package com.cooksys.socialmedia.services.impl;
 
 import com.cooksys.socialmedia.dtos.*;
 import com.cooksys.socialmedia.entities.Credentials;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
 import com.cooksys.socialmedia.entities.Hashtag;
-
 import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.entities.User;
 import com.cooksys.socialmedia.exceptions.BadRequestException;
@@ -90,103 +82,6 @@ public class TweetServiceImpl implements TweetService {
         }
 
         return userMapper.entitiesToDtos(mentionedUsersNotDeleted);
-    }
-
-    @Override
-    public TweetResponseDto getTweetById(Long id) {
-
-        Optional<Tweet> current = tweetRepository.findById(id);
-
-        if (current.isEmpty()) {
-            throw new NotFoundException("Tweet not found.");
-        }
-
-        Tweet tweet = current.get();
-        if (tweet.isDeleted()) {
-            throw new NotFoundException("Tweet not Found");
-        }
-
-        return tweetMapper.entityToDto(tweet);
-    }
-
-    @Override
-    public List<TweetResponseDto> getRepostsById(Long id) {
-        Optional<Tweet> current = tweetRepository.findById(id);
-
-        if (current.isEmpty()) {
-            throw new NotFoundException("Tweet not found.");
-        }
-
-        Tweet finall = current.get();
-
-        if (finall.isDeleted()) {
-            throw new NotFoundException("Tweet not found.");
-        }
-
-        List<TweetResponseDto> repostList = new ArrayList<>();
-
-        for (Tweet t : finall.getReposts()) {
-            if (!t.isDeleted()) {
-                repostList.add(tweetMapper.entityToDto(t));
-            }
-        }
-
-        return repostList;
-    }
-
-    @Override
-    public List<UserResponseDto> getLikesById(Long id) {
-        Optional<Tweet> current = tweetRepository.findById(id);
-
-        if (current.isEmpty()) {
-            throw new NotFoundException("Tweet not found.");
-        }
-
-        Tweet finall = current.get();
-
-        List<UserResponseDto> userList = new ArrayList<>();
-
-        for (User u : finall.getLikedByUsers()) {
-            if (!u.isDeleted()) {
-                userList.add(userMapper.entityToDto(u));
-            }
-        }
-        return userList;
-    }
-
-    @Override
-    public TweetResponseDto createReply(Long id, TweetRequestDto tweetRequest) {
-        Tweet current = new Tweet();
-        CredentialsDto credentials = tweetRequest.getCredentials();
-        Optional<Tweet> checker = tweetRepository.findById(id);
-        User author = new User();
-        if (checker.isEmpty()) {
-            throw new NotFoundException("Tweet with this id not found.");
-        }
-        for (User u : userRepository.findAll()) {
-            if (credentialsMapper.entityToDto(u.getCredentials()).equals(credentials) && !u.isDeleted()) {
-                author = u;
-            }
-        }
-
-        if (author.getCredentials() == null) {
-            throw new NotAuthorizedException("Credentials are not correct.");
-        }
-
-
-        Tweet checkerTweet = checker.get();
-        if (checkerTweet.isDeleted()) {
-            throw new NotFoundException("Tweet with this id not found.");
-        }
-        if (tweetRequest.getContent() == null) {
-            throw new BadRequestException("Content needs to be filled in.");
-        }
-
-        current.setAuthor(author);
-        current.setContent(tweetRequest.getContent());
-        current.setInReplyTo(checkerTweet);
-
-        return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
     }
 
     @Override
