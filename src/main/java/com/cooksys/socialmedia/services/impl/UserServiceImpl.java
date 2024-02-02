@@ -44,7 +44,11 @@ public class UserServiceImpl implements UserService {
         User u = new User();
         CredentialsDto credentials = userRequestDto.getCredentials();
         ProfileDto profile = userRequestDto.getProfile();
-
+        
+        if (credentials == null || profile == null || profile.getEmail() == null || credentials.getPassword() == null || credentials.getUsername() == null) {
+            throw new BadRequestException("A required parameter is missing");
+        }
+        
         for (User use : userRepository.findAll()) {
             if (use.getCredentials().getUsername().equals(credentials.getUsername())) {
                 if (use.isDeleted()) {
@@ -57,9 +61,6 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        if (credentials == null || profile == null || profile.getEmail() == null || credentials.getPassword() == null || credentials.getUsername() == null) {
-            throw new BadRequestException("A required parameter is missing");
-        }
         u.setProfile(userMapper.requestDtoToEntity(userRequestDto).getProfile());
         u.setCredentials(userMapper.requestDtoToEntity(userRequestDto).getCredentials());
         System.out.println(u.getProfile());
