@@ -15,6 +15,7 @@ import com.cooksys.socialmedia.exceptions.BadRequestException;
 import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
 import com.cooksys.socialmedia.exceptions.NotFoundException;
 import com.cooksys.socialmedia.mappers.CredentialsMapper;
+import com.cooksys.socialmedia.mappers.HashtagMapper;
 import com.cooksys.socialmedia.mappers.TweetMapper;
 import com.cooksys.socialmedia.mappers.UserMapper;
 import com.cooksys.socialmedia.repositories.HashtagRepository;
@@ -33,6 +34,7 @@ public class TweetServiceImpl implements TweetService {
     private final UserRepository userRepository;
     private final CredentialsMapper credentialsMapper;
     private final HashtagRepository hashtagRepository;
+    private final HashtagMapper hashtagMapper;
 
     @Override
     public List<TweetResponseDto> getAllTweets() {
@@ -322,5 +324,19 @@ public class TweetServiceImpl implements TweetService {
   	current.setContent(tweetRequest.getContent());
   	
   	return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
+  }
+  
+  @Override
+  public List<HashtagResponseDto> getTagsByTweetId(Long tweetId) {
+	  Tweet tweet = tweetRepository.findById(tweetId).orElseThrow(() -> new IllegalArgumentException("Invalid tweet ID: " + tweetId));
+	  if (tweet.isDeleted()) {
+          throw new NotFoundException("Tweet with ID: " + tweetId + " not found");
+      }
+      List<Hashtag> allTags = tweet.getHashtags();
+
+      if (allTags.isEmpty()) {
+          throw new NotFoundException("No tags found in this tweet: " + tweetId);
+      }
+      return hashtagMapper.entitiesToDtos(allTags);
   }
 }
