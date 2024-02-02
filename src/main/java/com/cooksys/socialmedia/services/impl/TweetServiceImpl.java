@@ -1,9 +1,6 @@
 package com.cooksys.socialmedia.services.impl;
 
-import com.cooksys.socialmedia.dtos.CredentialsDto;
-import com.cooksys.socialmedia.dtos.TweetRequestDto;
-import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.dtos.UserResponseDto;
+import com.cooksys.socialmedia.dtos.*;
 import com.cooksys.socialmedia.entities.Credentials;
 import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.entities.User;
@@ -49,8 +46,7 @@ public class TweetServiceImpl implements TweetService {
             throw new NotFoundException("Tweet with ID: " + tweetId + " not found");
         }
         // Check if the user has permission to delete the tweet
-        if (!tweet.getAuthor().getCredentials().getUsername().equals(credentialsDto.getUsername())
-                || !tweet.getAuthor().getCredentials().getPassword().equals(credentialsDto.getPassword())) {
+        if (!tweet.getAuthor().getCredentials().getUsername().equals(credentialsDto.getUsername()) || !tweet.getAuthor().getCredentials().getPassword().equals(credentialsDto.getPassword())) {
             throw new NotAuthorizedException("Unauthorized to delete tweet with ID: " + tweetId);
         }
 
@@ -195,5 +191,50 @@ public class TweetServiceImpl implements TweetService {
         newTweet.setRepostOf(tweet);
 
         return tweetMapper.entityToDto((tweetRepository.saveAndFlush(newTweet)));
+    }
+
+    @Override
+    public ContextDto getContext(Long tweetId) {
+        Tweet tweet = tweetRepository.findById(tweetId).orElseThrow(() -> new NotFoundException("Invalid tweet ID: " + tweetId));
+
+        if (tweet.isDeleted()) {
+            throw new NotFoundException("Tweet with ID: " + tweetId + " not found");
+        }
+
+        ContextDto context = new ContextDto();
+        List<TweetResponseDto> replyTos = new ArrayList<>();
+        List<TweetResponseDto> replies = new ArrayList<>();
+
+        TweetResponseDto tweetResponseDto = tweetMapper.entityToDto(tweet);
+        getInReplyToHelper(tweetResponseDto, replyTos);
+        getRepliesHelper(tweet.getReplies(), replies);
+
+
+        context.setTarget(tweetResponseDto);
+        context.setBefore(replyTos);
+        context.setAfter(replies);
+
+        return context;
+    }
+
+    private void getInReplyToHelper(TweetResponseDto tweet, List<TweetResponseDto> replyTos) {
+        Tweet t = tweetMapper.dtoToEntity(tweet.getInReplyTo());
+        if (t == null) {
+            return;
+        }
+        replyTos.add(tweetMapper.entityToDto(t));
+        getInReplyToHelper(tweet.getInReplyTo(), replyTos);
+    }
+
+    private void getRepliesHelper(List<Tweet> tweets, List<TweetResponseDto> replies) {
+        if (tweets != null) {
+            for (Tweet t : tweets) {
+                if (t.isDeleted()) {
+                    continue;
+                }
+                replies.add(tweetMapper.entityToDto(t));
+                getRepliesHelper(t.getReplies(), replies);
+            }
+        }
     }
 }

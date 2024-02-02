@@ -1,9 +1,6 @@
 package com.cooksys.socialmedia.controllers;
 
-import com.cooksys.socialmedia.dtos.CredentialsDto;
-import com.cooksys.socialmedia.dtos.TweetRequestDto;
-import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.dtos.UserResponseDto;
+import com.cooksys.socialmedia.dtos.*;
 import com.cooksys.socialmedia.entities.Credentials;
 import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
 import com.cooksys.socialmedia.services.TweetService;
@@ -87,6 +84,11 @@ public class TweetController {
     @PostMapping("/{id}/repost")
     public TweetResponseDto createRepost(@PathVariable Long id, @RequestBody Credentials credentialsDto) {
         return tweetService.createRepost(id, credentialsDto);
+    }
+
+    @GetMapping("/{id}/context")
+    public ContextDto getContext(@PathVariable Long id) {
+        return tweetService.getContext(id);
     }
 
 
