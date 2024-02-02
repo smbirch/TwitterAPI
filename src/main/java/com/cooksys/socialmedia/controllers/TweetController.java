@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.cooksys.socialmedia.services.HashtagService;
 import com.cooksys.socialmedia.services.TweetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,8 @@ import java.util.List;
 public class TweetController {
 
     private final TweetService tweetService;
+    private final HashtagService hashtagService;
+
 
     /**
      * Retrieves all non-deleted tweets in reverse-chronological order.
@@ -89,6 +93,9 @@ public class TweetController {
 	public TweetResponseDto createReply(@PathVariable("id") Long id, @RequestBody TweetRequestDto tweetRequest) {
 		return tweetService.createReply(id, tweetRequest);
 	}
-
-
+	
+	@PostMapping
+	public TweetResponseDto postTweet(@RequestBody TweetRequestDto tweetRequest) {
+		return tweetService.postTweet(tweetRequest);
+	}
 }

@@ -17,11 +17,14 @@ public interface TweetService {
 
     List<UserResponseDto> getUsersMentionedByTweetId(Long id);
 
-TweetResponseDto getTweetById(Long id);
+    TweetResponseDto getTweetById(Long id);
 
-List<TweetResponseDto> getRepostsById(Long id);
+    List<TweetResponseDto> getRepostsById(Long id);
 
-List<UserResponseDto> getLikesById(Long id);
+    List<UserResponseDto> getLikesById(Long id);
 
-TweetResponseDto createReply(Long id, TweetRequestDto tweetRequest);
+    TweetResponseDto createReply(Long id, TweetRequestDto tweetRequest);
+
+    TweetResponseDto postTweet(TweetRequestDto tweetRequest);
+
 }

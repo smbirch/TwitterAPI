@@ -231,4 +231,34 @@ public class TweetServiceImpl implements TweetService {
   	
   	return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
   }
+  
+  @Override
+  public TweetResponseDto postTweet(TweetRequestDto tweetRequest) {
+  	Tweet current = new Tweet();
+  	CredentialsDto credentials = tweetRequest.getCredentials();
+  	
+  	Optional<User> foundUser = userRepository.findByCredentials_Username(credentials.getUsername());
+  	
+  	if(foundUser.isEmpty()) {
+  		throw new NotAuthorizedException("Credentials are empty.");
+  	}
+  	CredentialsDto dtoCredentials = credentialsMapper.entityToDto(foundUser.get().getCredentials());
+  	System.out.println(dtoCredentials.getUsername());
+  	System.out.println(credentials.getUsername());
+ 	System.out.println(dtoCredentials.getPassword());
+  	System.out.println(credentials.getPassword());
+  	if(!credentials.getUsername().equals(dtoCredentials.getUsername())  ||  !credentials.getPassword().equals(dtoCredentials.getPassword())) {
+  		// compare two credentials 
+ 		throw new NotAuthorizedException("Credentials are not correct.");
+  	}
+  	
+  	if(tweetRequest.getContent() == null) {
+  		throw new BadRequestException("Content needs to be filled in.");
+  	}
+
+  	current.setAuthor(foundUser.get());
+  	current.setContent(tweetRequest.getContent());
+  	
+  	return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
+  }
 }
