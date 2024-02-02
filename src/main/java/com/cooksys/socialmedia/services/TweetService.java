@@ -28,4 +28,6 @@ public interface TweetService {
     
     List<HashtagResponseDto> getTagsByTweetId(Long tweetId);
 
+    List<TweetResponseDto> getTweetByUserMentions(String username);
+
 }
