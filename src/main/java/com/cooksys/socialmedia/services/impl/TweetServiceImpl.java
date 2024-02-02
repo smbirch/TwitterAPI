@@ -296,8 +296,45 @@ public class TweetServiceImpl implements TweetService {
   	return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
   }
   
+  private Hashtag createReturnHashtag(String hash) {
+		Optional<Hashtag> foundHashtag = hashtagRepository.findByLabel(label);
+		if(foundHashtag.isPresent()) {
+			return foundHashtag.get();
+		}
+		Hashtag createdHashtag = new Hashtag();
+		createdHashtag.setLabel(hash);
+		hashtagRepository.saveAndFlush(createdHashtag);
+		return createdHashtag;
+  }
+  
+  private Optional<User> checkUser(String hash) {
+		Optional<Hashtag> foundHashtag = hashtagRepository.findByLabel(label);
+		if(foundHashtag.isPresent()) {
+			return foundHashtag.get();
+		}
+		Hashtag createdHashtag = new Hashtag();
+		createdHashtag.setLabel(hash);
+		hashtagRepository.saveAndFlush(createdHashtag);
+		return createdHashtag;
+  }
   @Override
   public TweetResponseDto postTweet(TweetRequestDto tweetRequest) {
+
+	  ArrayList<Hashtag> hashtagWords = new ArrayList<Hashtag>();
+	  
+	  ArrayList<User> mentionWords = new ArrayList<User>();
+	  
+	  String[] words = tweetRequest.getContent().split(" ");
+	  for (String word : words) {
+          if (word.startsWith("#")) {
+        	  	hashtagWords.add(word);
+          }
+        	  if (word.startsWith("@")) {
+        		  mentionWords.add(word);
+          }
+	  }
+          
+
   	Tweet current = new Tweet();
   	CredentialsDto credentials = tweetRequest.getCredentials();
   	
@@ -307,12 +344,8 @@ public class TweetServiceImpl implements TweetService {
   		throw new NotAuthorizedException("Credentials are empty.");
   	}
   	CredentialsDto dtoCredentials = credentialsMapper.entityToDto(foundUser.get().getCredentials());
-  	System.out.println(dtoCredentials.getUsername());
-  	System.out.println(credentials.getUsername());
- 	System.out.println(dtoCredentials.getPassword());
-  	System.out.println(credentials.getPassword());
   	if(!credentials.getUsername().equals(dtoCredentials.getUsername())  ||  !credentials.getPassword().equals(dtoCredentials.getPassword())) {
-  		// compare two credentials 
+  		
  		throw new NotAuthorizedException("Credentials are not correct.");
   	}
   	
