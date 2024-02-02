@@ -67,39 +67,6 @@ public class UserServiceImpl implements UserService {
 
 
         return userMapper.entityToDto(userRepository.saveAndFlush(u));
-
-    public UserResponseDto createUser(UserRequestDto userRequestDto){
-      User u = new User();
-      
-      if(userRequestDto == null) {
-    	  throw new BadRequestException("There is no body.");
-      }
-      
-      CredentialsDto credentials = userRequestDto.getCredentials();
-      ProfileDto profile = userRequestDto.getProfile();
-
-      if(credentials == null || profile == null || profile.getEmail() == null || credentials.getPassword() == null || credentials.getUsername() == null) {
-    	  throw new BadRequestException("A required parameter is missing");
-      }  
-      
-      for(User use: userRepository.findAll()) {
-    	  if(use.getCredentials().getUsername().equals(credentials.getUsername())) {
-    		  if(use.isDeleted() == true) {
-    			  use.setDeleted(false);
-    			  userRepository.flush();
-    			  return userMapper.entityToDto(use);
-    		  }
-    		  else {
-    			  throw new BadRequestException("This username is already in use.");  
-    		  }
-    	  }
-      }
-      
-  	  u.setProfile(userMapper.requestDtoToEntity(userRequestDto).getProfile());
-  	  u.setCredentials(userMapper.requestDtoToEntity(userRequestDto).getCredentials());
-
-  	  return userMapper.entityToDto(userRepository.saveAndFlush(u));
-
     }
 
     @Override

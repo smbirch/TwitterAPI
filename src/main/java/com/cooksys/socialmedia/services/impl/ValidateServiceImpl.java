@@ -1,11 +1,7 @@
 package com.cooksys.socialmedia.services.impl;
 
 
-import java.util.Optional;
-import org.springframework.stereotype.Service;
-
 import com.cooksys.socialmedia.entities.Hashtag;
-
 import com.cooksys.socialmedia.entities.User;
 import com.cooksys.socialmedia.mappers.UserMapper;
 import com.cooksys.socialmedia.repositories.HashtagRepository;
@@ -22,18 +18,14 @@ public class ValidateServiceImpl implements ValidateService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final HashtagRepository hashtagRepository;
 
-
-	  private final UserRepository userRepository;
-	  private final UserMapper userMapper;
-	  private final HashtagRepository hashtagRepository;
-
-	  @Override
+    @Override
     public boolean checkForHashtagExistance(String label) {
-		Optional<Hashtag> foundHashtag = hashtagRepository.findByLabel(label);
-		return foundHashtag.isPresent();
-		
-	}
+        Optional<Hashtag> foundHashtag = hashtagRepository.findByLabel(label);
+        return foundHashtag.isPresent();
+
+    }
 
     @Override
     public boolean checkForUsernameExistance(String username) {
