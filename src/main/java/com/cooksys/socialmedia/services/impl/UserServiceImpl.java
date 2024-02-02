@@ -49,10 +49,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+    public UserResponseDto createUser(UserRequestDto userRequestDto){
       User u = new User();
+      
+      if(userRequestDto == null) {
+    	  throw new BadRequestException("There is no body.");
+      }
+      
       CredentialsDto credentials = userRequestDto.getCredentials();
       ProfileDto profile = userRequestDto.getProfile();
+
+      if(credentials == null || profile == null || profile.getEmail() == null || credentials.getPassword() == null || credentials.getUsername() == null) {
+    	  throw new BadRequestException("A required parameter is missing");
+      }  
       
       for(User use: userRepository.findAll()) {
     	  if(use.getCredentials().getUsername().equals(credentials.getUsername())) {
@@ -67,9 +76,6 @@ public class UserServiceImpl implements UserService {
     	  }
       }
       
-      if(credentials == null || profile == null || profile.getEmail() == null || credentials.getPassword() == null || credentials.getUsername() == null) {
-    	  throw new BadRequestException("A required parameter is missing");
-      }  
   	  u.setProfile(userMapper.requestDtoToEntity(userRequestDto).getProfile());
   	  u.setCredentials(userMapper.requestDtoToEntity(userRequestDto).getCredentials());
   	  System.out.println(u.getProfile());
@@ -151,7 +157,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.entitiesToDtos(followersSafeCopy);
 
     }
-}
     
     @Override
     public List<TweetResponseDto> getFeed(String username){

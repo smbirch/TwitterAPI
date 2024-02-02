@@ -52,7 +52,7 @@ public class UserController {
      * User
      */
     @PostMapping
-    public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
+    public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto){
         return userService.createUser(userRequestDto);
     }
 
@@ -62,7 +62,7 @@ public class UserController {
      * @return 'User' - The user retrieved with the given username.
      */
     @GetMapping("/@{username}")
-    public UserResponseDto getUserByUsername(@PathVariable String username) {
+    public UserResponseDto getUserByUsername(@PathVariable("username") String username) {
         return userService.getUserByUsername(username);
     }
 
@@ -80,7 +80,7 @@ public class UserController {
      * User
      */
     @PatchMapping("/@{username}")
-    public UserResponseDto updateUsername(@PathVariable String newUsername) {
+    public UserResponseDto updateUsername(@PathVariable("username") String newUsername) {
         return userService.updateUsername(newUsername);
     }
 
@@ -156,7 +156,7 @@ public class UserController {
      * @throws NotFoundException If no active user is found with the given username.
      */
     @GetMapping("/@{username}/following")
-    public List<UserResponseDto> getFollowing(@PathVariable String username) {
+    public List<UserResponseDto> getFollowing(@PathVariable("username") String username) {
         return userService.getFollowing(username);
     }
 
@@ -170,7 +170,7 @@ public class UserController {
      */
 
     @GetMapping("/@{username}/tweets")
-    public List<TweetResponseDto> getTweetsByUsername(@PathVariable String username) {
+    public List<TweetResponseDto> getTweetsByUsername(@PathVariable("username") String username) {
         return userService.getTweetsByUsername(username);
     }
 

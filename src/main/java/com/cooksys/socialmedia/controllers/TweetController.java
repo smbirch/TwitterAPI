@@ -1,8 +1,8 @@
 package com.cooksys.socialmedia.controllers;
 
+import com.cooksys.socialmedia.dtos.ContextDto;
 import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetRequestDto;
-
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
 import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
@@ -48,7 +48,7 @@ public class TweetController {
      * @return An array of 'User' objects representing the users mentioned in the tweet.
      */
     @GetMapping("/{id}/mentions")
-    public List<UserResponseDto> getUsersMentionedByTweetId(@PathVariable Long id) {
+    public List<UserResponseDto> getUsersMentionedByTweetId(@PathVariable("id") Long id) {
         return tweetService.getUsersMentionedByTweetId(id);
     }
 
@@ -69,7 +69,7 @@ public class TweetController {
      * @throws NotAuthorizedException   If the provided credentials do not match the author of the tweet.
      */
     @DeleteMapping("/{id}")
-    public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody CredentialsDto credentials) {
+    public TweetResponseDto deleteTweet(@PathVariable("id") Long id, @RequestBody CredentialsDto credentials) {
         return tweetService.deleteTweetById(id, credentials);
     }
 	
