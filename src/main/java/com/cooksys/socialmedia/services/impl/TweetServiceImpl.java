@@ -246,7 +246,7 @@ public class TweetServiceImpl implements TweetService {
   			tracker = i;
   			starter = true;
   		}
-  		else if(!Character.isLetter(contenter.charAt(i)) && contenter.charAt(i) != '_') {
+  		else if(!Character.isLetter(contenter.charAt(i)) && !Character.isDigit(contenter.charAt(i)) && contenter.charAt(i) != '_') {
   			if(starter == true) {
   				special.add(contenter.substring(tracker, i));
   				starter = false;
@@ -271,13 +271,13 @@ public class TweetServiceImpl implements TweetService {
   		if(u.charAt(0) == '#') {
   			Hashtag h = new Hashtag();
   			for(Hashtag hasher: hashtagRepository.findAll()) {
-  				if(hasher.getLabel().equals(u.toLowerCase())) {
+  				if(hasher.getLabel().equals(u.substring(1))) {
   					h = hasher;
   				}
   			}
   			if(h.getLabel() == null)
   			{
-  				h.setLabel(u.toLowerCase());
+  				h.setLabel(u.substring(1));
   				h.getTweets().add(current);
   				hashtagRepository.saveAndFlush(h);
   			}
@@ -320,9 +320,65 @@ public class TweetServiceImpl implements TweetService {
   		throw new BadRequestException("Content needs to be filled in.");
   	}
 
+	String contenter = tweetRequest.getContent();
+  	
+  	System.out.println(contenter);
+  	
+  	int tracker = 0;
+  	boolean starter = false;
+  	
+  	List<String> special = new ArrayList<>();
+  	
+  	for(int i = 0; i < contenter.length(); i++) {
+  		if(contenter.charAt(i) == '#' || contenter.charAt(i) == '@') {
+  			tracker = i;
+  			starter = true;
+  		}
+  		else if(!Character.isLetter(contenter.charAt(i)) && !Character.isDigit(contenter.charAt(i)) && contenter.charAt(i) != '_') {
+  			if(starter == true) {
+  				special.add(contenter.substring(tracker, i));
+  				starter = false;
+  			}
+  			
+  		}
+  		
+  	}
+  	
+  	if(starter == true) {
+  		special.add(contenter.substring(tracker, contenter.length()));
+  	}
+  	
+  	System.out.println(special);
+  	
+  	
   	current.setAuthor(foundUser.get());
   	current.setContent(tweetRequest.getContent());
   	
+  	for(String u: special) {
+  		if(u.charAt(0) == '#') {
+  			Hashtag h = new Hashtag();
+  			for(Hashtag hasher: hashtagRepository.findAll()) {
+  				if(hasher.getLabel().equals(u.substring(1))) {
+  					h = hasher;
+  				}
+  			}
+  			if(h.getLabel() == null)
+  			{
+  				h.setLabel(u.substring(1));
+  				h.getTweets().add(current);
+  				hashtagRepository.saveAndFlush(h);
+  			}
+  		  	current.getHashtags().add(h);
+  		}
+  		else if(u.charAt(0) == '@') {
+  			String label = u.substring(1, u.length());
+  			for(User use: userRepository.findAll()) {
+  				if(use.getCredentials().getUsername().equals(label) && use.isDeleted() == false) {
+  					current.getMentionedUsers().add(use);
+  				}
+  			}
+  		}
+  	}
   	return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
   }
   

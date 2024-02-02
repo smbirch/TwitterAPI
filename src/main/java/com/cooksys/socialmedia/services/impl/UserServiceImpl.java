@@ -36,7 +36,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDto> getAllUsers() {
-        return userMapper.entitiesToDtos(userRepository.findAll());
+    	List<UserResponseDto> lister =  userMapper.entitiesToDtos(userRepository.findAll());
+    	
+    	for(UserResponseDto u: lister) {
+    		if(userMapper.responseDtoToEntity(u).isDeleted()) {
+    			lister.remove(u);
+    		}
+    	}
+    	
+    	return lister;
+    	
     }
 
     @Override
