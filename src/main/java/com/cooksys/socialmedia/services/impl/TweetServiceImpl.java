@@ -296,8 +296,10 @@ public class TweetServiceImpl implements TweetService {
   	return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
   }
   
+  // we need two functions, first function needs to take a string hashtag and then check if the hashtag exists, if it does return it, if not create it and then return created hashtag.  second function, check if user exists and if does return user, if it doesn't return null
+  
   private Hashtag createReturnHashtag(String hash) {
-		Optional<Hashtag> foundHashtag = hashtagRepository.findByLabel(label);
+		Optional<Hashtag> foundHashtag = hashtagRepository.findByLabel(hash);
 		if(foundHashtag.isPresent()) {
 			return foundHashtag.get();
 		}
@@ -307,30 +309,30 @@ public class TweetServiceImpl implements TweetService {
 		return createdHashtag;
   }
   
-  private Optional<User> checkUser(String hash) {
-		Optional<Hashtag> foundHashtag = hashtagRepository.findByLabel(label);
-		if(foundHashtag.isPresent()) {
-			return foundHashtag.get();
-		}
-		Hashtag createdHashtag = new Hashtag();
-		createdHashtag.setLabel(hash);
-		hashtagRepository.saveAndFlush(createdHashtag);
-		return createdHashtag;
+  private Optional<User> checkUser(String username) {
+	  	String updatedUsername = username.substring(1);
+		Optional<User> foundUser = userRepository.findByCredentials_Username(updatedUsername);
+	return foundUser;
   }
   @Override
   public TweetResponseDto postTweet(TweetRequestDto tweetRequest) {
 
 	  ArrayList<Hashtag> hashtagWords = new ArrayList<Hashtag>();
 	  
-	  ArrayList<User> mentionWords = new ArrayList<User>();
+	  ArrayList<User> mentionUsers = new ArrayList<User>();
 	  
 	  String[] words = tweetRequest.getContent().split(" ");
 	  for (String word : words) {
+		  
           if (word.startsWith("#")) {
-        	  	hashtagWords.add(word);
+        	  hashtagWords.add(createReturnHashtag(word));
+        	  	
           }
         	  if (word.startsWith("@")) {
-        		  mentionWords.add(word);
+        		  Optional<User> foundUser = checkUser(word);
+        		  if(foundUser.isPresent()) {
+        				mentionUsers.add(foundUser.get());
+        			}
           }
 	  }
           
@@ -355,6 +357,8 @@ public class TweetServiceImpl implements TweetService {
 
   	current.setAuthor(foundUser.get());
   	current.setContent(tweetRequest.getContent());
+  	current.setHashtags(hashtagWords);
+  	current.setMentionedUsers(mentionUsers);
   	
   	return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
   }
@@ -372,4 +376,5 @@ public class TweetServiceImpl implements TweetService {
       }
       return hashtagMapper.entitiesToDtos(allTags);
   }
+  
 }
