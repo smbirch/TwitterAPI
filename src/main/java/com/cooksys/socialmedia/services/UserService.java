@@ -18,15 +18,15 @@ public interface UserService {
 
     UserResponseDto deleteUserByUsername(String username, CredentialsDto credentials);
 
-    UserResponseDto followUser(UserRequestDto usertoFollow);
-
     UserResponseDto unfollowUser(UserRequestDto userToUnfollow);
 
     List<TweetResponseDto> getTweetsByUsername(String username);
 
     List<UserResponseDto> getFollowing(String username);
-    
+
     List<TweetResponseDto> getFeed(String username);
-    
+
     List<UserResponseDto> getFollowers(String username);
+
+    void followUser(String username, CredentialsDto credentialsDto);
 }

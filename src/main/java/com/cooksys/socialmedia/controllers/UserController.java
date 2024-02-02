@@ -1,17 +1,6 @@
 package com.cooksys.socialmedia.controllers;
 
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
@@ -106,21 +95,6 @@ public class UserController {
     }
 
     /**
-     * Subscribes the user whose credentials are provided by the request body to the
-     * user whose username is given in the URL. If there is already a following
-     * relationship between the two users, no such followable user exists (deleted or
-     * never created), or the credentials provided do not match an active user in the
-     * database, an error should be sent as a response. If successful, no data is sent.
-     * <p>
-     * Request:
-     * 'Credentials'
-     */
-    @PostMapping("/@{username}/follow")
-    public UserResponseDto followUser(@RequestBody UserRequestDto usertoFollow) {
-        return userService.followUser(usertoFollow);
-    }
-
-    /**
      * Unsubscribes the user whose credentials are provided by the request body from
      * the user whose username is given in the URL. If there is no preexisting
      * following relationship between the two users, no such followable user exists
@@ -135,14 +109,15 @@ public class UserController {
     public UserResponseDto unfollowUser(@RequestBody UserRequestDto userToUnfollow) {
         return userService.unfollowUser(userToUnfollow);
     }
-    
+
     @GetMapping("/@{username}/feed")
     public List<TweetResponseDto> getFeed(@PathVariable("username") String username) {
-    	return userService.getFeed(username);
+        return userService.getFeed(username);
     }
+
     @GetMapping("/@{username}/followers")
     public List<UserResponseDto> getFollowers(@PathVariable("username") String username) {
-    	return userService.getFollowers(username);
+        return userService.getFollowers(username);
     }
 
     /**
@@ -152,7 +127,7 @@ public class UserController {
      *
      * @param username The username of the user for whom to retrieve the followed users.
      * @return A list of active users followed by the specified user.
-     *         The response is in the form of a List of User objects.
+     * The response is in the form of a List of User objects.
      * @throws NotFoundException If no active user is found with the given username.
      */
     @GetMapping("/@{username}/following")
@@ -164,14 +139,31 @@ public class UserController {
      * Retrieves all (non-deleted) tweets authored by the user with the given username.
      * This includes simple tweets, reposts, and replies. The tweets should appear in reverse-chronological order.
      * If no active user with that username exists (deleted or never created), an error should be sent in lieu of a response.
-     *
+     * <p>
      * Response:
      * ['Tweet']
      */
-
     @GetMapping("/@{username}/tweets")
     public List<TweetResponseDto> getTweetsByUsername(@PathVariable("username") String username) {
         return userService.getTweetsByUsername(username);
+    }
+
+    /**
+     * Subscribes the user, whose credentials are provided by the request body,
+     * to the user whose username is given in the URL. If there is already a
+     * following relationship between the two users, no such followable user exists
+     * (deleted or never created), or the credentials provided do not match an
+     * active user in the database, an error should be sent as a response.
+     * If successful, no data is sent.
+     *
+     * <p>
+     * Request:
+     * {@code Credentials}
+     * </p>
+     */
+    @PostMapping("/@{username}/follow")
+    public void followUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto) {
+        userService.followUser(username, credentialsDto);
     }
 
 }

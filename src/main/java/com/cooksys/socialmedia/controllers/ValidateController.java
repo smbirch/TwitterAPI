@@ -29,9 +29,7 @@ public class ValidateController {
 
     // Checks whether a given username is available
     @GetMapping("/username/available/@{username}")
-    public boolean checkUsernameAvailability(@PathVariable("username") String username) {
-        return validateService.checkUsernameAvailability(username);
+    public boolean validateUsername(@PathVariable String username) {
+        return validateService.validateUsername(username);
     }
-
-
 }
