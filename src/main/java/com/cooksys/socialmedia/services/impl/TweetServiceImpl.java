@@ -214,9 +214,17 @@ public class TweetServiceImpl implements TweetService {
   	for(String u: special) {
   		if(u.charAt(0) == '#') {
   			Hashtag h = new Hashtag();
-  			h.setLabel(u.toLowerCase());
-  			h.getTweets().add(current);
-  			hashtagRepository.saveAndFlush(h);
+  			for(Hashtag hasher: hashtagRepository.findAll()) {
+  				if(hasher.getLabel().equals(u.toLowerCase())) {
+  					h = hasher;
+  				}
+  			}
+  			if(h.getLabel() == null)
+  			{
+  				h.setLabel(u.toLowerCase());
+  				h.getTweets().add(current);
+  				hashtagRepository.saveAndFlush(h);
+  			}
   		  	current.getHashtags().add(h);
   		}
   		else if(u.charAt(0) == '@') {
