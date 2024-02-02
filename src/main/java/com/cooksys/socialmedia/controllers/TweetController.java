@@ -3,6 +3,17 @@ package com.cooksys.socialmedia.controllers;
 import com.cooksys.socialmedia.dtos.*;
 import com.cooksys.socialmedia.entities.Credentials;
 import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
+
+import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cooksys.socialmedia.services.HashtagService;
+
 import com.cooksys.socialmedia.services.TweetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +26,8 @@ import java.util.List;
 public class TweetController {
 
     private final TweetService tweetService;
+    private final HashtagService hashtagService;
+
 
     /**
      * Retrieves all non-deleted tweets in reverse-chronological order.
@@ -35,7 +48,7 @@ public class TweetController {
      * @return An array of 'User' objects representing the users mentioned in the tweet.
      */
     @GetMapping("/{id}/mentions")
-    public List<UserResponseDto> getUsersMentionedByTweetId(@PathVariable Long id) {
+    public List<UserResponseDto> getUsersMentionedByTweetId(@PathVariable("id") Long id) {
         return tweetService.getUsersMentionedByTweetId(id);
     }
 
@@ -56,7 +69,7 @@ public class TweetController {
      * @throws NotAuthorizedException   If the provided credentials do not match the author of the tweet.
      */
     @DeleteMapping("/{id}")
-    public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody CredentialsDto credentials) {
+    public TweetResponseDto deleteTweet(@PathVariable("id") Long id, @RequestBody CredentialsDto credentials) {
         return tweetService.deleteTweetById(id, credentials);
     }
 
@@ -91,5 +104,5 @@ public class TweetController {
         return tweetService.getContext(id);
     }
 
-
 }
+

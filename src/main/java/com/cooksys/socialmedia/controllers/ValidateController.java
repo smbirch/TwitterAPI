@@ -17,7 +17,7 @@ public class ValidateController {
 
     //    Checks whether a given hashtag exists.
     @GetMapping("/tag/exists/{label}")
-    public boolean checkForHashtagExistance(@PathVariable String label) {
+    public boolean checkForHashtagExistance(@PathVariable("label") String label) {
         return validateService.checkForHashtagExistance(label);
     }
 
@@ -32,5 +32,4 @@ public class ValidateController {
     public boolean validateUsername(@PathVariable String username) {
         return validateService.validateUsername(username);
     }
-
 }
