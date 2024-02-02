@@ -3,8 +3,6 @@ package com.cooksys.socialmedia.controllers;
 import com.cooksys.socialmedia.dtos.*;
 import com.cooksys.socialmedia.entities.Credentials;
 import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
-
-import com.cooksys.socialmedia.exceptions.NotAuthorizedException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,7 +70,6 @@ public class TweetController {
     public TweetResponseDto deleteTweet(@PathVariable("id") Long id, @RequestBody CredentialsDto credentials) {
         return tweetService.deleteTweetById(id, credentials);
     }
-
     @GetMapping("/{id}")
     public TweetResponseDto getTweetById(@PathVariable("id") Long id) {
         return tweetService.getTweetById(id);
@@ -103,6 +100,14 @@ public class TweetController {
     public ContextDto getContext(@PathVariable Long id) {
         return tweetService.getContext(id);
     }
-
+	
+	@PostMapping
+	public TweetResponseDto postTweet(@RequestBody TweetRequestDto tweetRequest) {
+		return tweetService.postTweet(tweetRequest);
+	}
+	@GetMapping("{id}/tags")
+	public List<HashtagResponseDto> retrieveTagsById(@PathVariable("id") Long tweetId) {
+		return tweetService.getTagsByTweetId(tweetId);
+	}
 }
 
