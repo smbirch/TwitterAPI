@@ -346,6 +346,9 @@ public class TweetServiceImpl implements TweetService {
   		throw new NotAuthorizedException("Credentials are empty.");
   	}
   	CredentialsDto dtoCredentials = credentialsMapper.entityToDto(foundUser.get().getCredentials());
+  	if(dtoCredentials == null) {
+  		throw new BadRequestException("Didn't find user.");
+  	}
   	if(!credentials.getUsername().equals(dtoCredentials.getUsername())  ||  !credentials.getPassword().equals(dtoCredentials.getPassword())) {
   		
  		throw new NotAuthorizedException("Credentials are not correct.");

@@ -106,8 +106,8 @@ public class UserController {
      * 'Credentials'
      */
     @PostMapping("/@{username}/unfollow")
-    public void unfollowUser(@PathVariable("username") String username,@RequestBody CredentialsDto userToUnfollow) {
-        userService.unfollowUser(username, userToUnfollow);
+    public void unfollowUser(@PathVariable("username") String username,@RequestBody CredentialsDto credentials) {
+        userService.unfollowUser(username, credentials);
     }
 
     @GetMapping("/@{username}/feed")
