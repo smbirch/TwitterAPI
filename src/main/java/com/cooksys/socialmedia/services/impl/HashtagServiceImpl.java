@@ -39,7 +39,7 @@ public class HashtagServiceImpl implements HashtagService {
 
         Hashtag current = new Hashtag();
         for (Hashtag h : hashList) {
-            if (h.getLabel().equals("#" + label)) {
+            if (h.getLabel().equals(label)) {
                 System.out.println(h.getLabel());
                 current = h;
             }

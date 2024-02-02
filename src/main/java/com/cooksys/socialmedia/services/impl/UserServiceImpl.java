@@ -36,7 +36,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDto> getAllUsers() {
-        return userMapper.entitiesToDtos(userRepository.findAll());
+    	List<UserResponseDto> lister =  userMapper.entitiesToDtos(userRepository.findAll());
+    	
+    	for(UserResponseDto u: lister) {
+    		if(userMapper.responseDtoToEntity(u).isDeleted()) {
+    			lister.remove(u);
+    		}
+    	}
+    	
+    	return lister;
+    	
     }
 
     @Override
@@ -107,8 +116,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto unfollowUser(UserRequestDto userToUnfollow) {
-        return null;
+    public void unfollowUser(String username, CredentialsDto credentials) {
+    	
+    	if(username == null) {
+    		throw new BadRequestException("No username given.");
+    	}
+    	
+        List<User> userList = userRepository.findAll();
+        User current = new User();
+        User toUnfollow = new User();
+        for(User u: userList) {
+        	if(credentialsMapper.entityToDto(u.getCredentials()).equals(credentials) && u.isDeleted() == false) {
+        		current = u;
+        	}
+        	if(u.getCredentials().getUsername().equals(username) && !u.isDeleted()) {
+        		toUnfollow = u;
+        	}
+        }
+        
+        if(current.getCredentials() == null) {
+        	throw new NotFoundException(" Credentials do not match. ");
+        }
+        
+        List<User> following = current.getFollowing();
+        if(following != null && following.contains(toUnfollow)) {
+        	following.remove(toUnfollow);
+        }
+        else if(!following.contains(toUnfollow)) {
+        	throw new BadRequestException("You are not following this user.");
+        }
+        current.setFollowing(following);
+
+        List<User> followers = toUnfollow.getFollowers();
+        if(followers != null && followers.contains(current)) {
+        	followers.remove(current);
+        }
+        toUnfollow.setFollowers(followers);
+        
+        userRepository.flush();
+    	
     }
 
     @Override
@@ -127,7 +173,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDto> getFollowing(String username) {
         User thisUser = getUserHelper(username);
-        List<User> followers = thisUser.getFollowers();
+        List<User> followers = thisUser.getFollowing();
         List<User> followersSafeCopy = new ArrayList<>(followers);
 
         followersSafeCopy.removeIf(User::isDeleted);
@@ -206,9 +252,10 @@ public class UserServiceImpl implements UserService {
         } else if (user.getFollowing().contains(userToFollow)) {
             throw new BadRequestException("You are already following " + username);
         }
-
+        user.getFollowing().add(userToFollow);
         userToFollow.getFollowers().add(user);
         userRepository.saveAndFlush(userToFollow);
+        userRepository.saveAndFlush(user);
 
     }
 }
