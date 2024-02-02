@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
 
         return userMapper.entityToDto(userRepository.saveAndFlush(u));
-
+    }
     public UserResponseDto createUser(UserRequestDto userRequestDto){
       User u = new User();
       
