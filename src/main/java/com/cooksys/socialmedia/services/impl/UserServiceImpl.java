@@ -256,19 +256,35 @@ public class UserServiceImpl implements UserService {
   	  	}
   	  User user = foundUser.get();
   	  
-  	  if (!user.getCredentials().getPassword().equals(userRequestDto.getCredentials().getPassword())) {
+  	CredentialsDto checkCred = userRequestDto.getCredentials();
+  		if(checkCred == null) {
+  			throw new NotAuthorizedException("Not authorized");
+  		}
+  	  
+  	  if (!user.getCredentials().getPassword().equals(checkCred.getPassword())) {
   		  throw new NotAuthorizedException("Not authorized");
   	  } 
-  	  if (!user.getCredentials().getUsername().equals(userRequestDto.getCredentials().getUsername())) {
+  	  if (!user.getCredentials().getUsername().equals(checkCred.getUsername())) {
   		  throw new BadRequestException("invalid");
         }
+  	  
   	 // Update the user's profile information with the provided profile details.
       ProfileDto profileDto = userRequestDto.getProfile();
-      user.getProfile().setFirstName(profileDto.getFirstName());
+      if (profileDto == null) {
+    	  throw new BadRequestException("invalid");
+      }
+      if (profileDto.getFirstName() != null) {
+          user.getProfile().setFirstName(profileDto.getFirstName());
+      }
+      if (profileDto.getLastName() != null) {
       user.getProfile().setLastName(profileDto.getLastName());
+      }
+      if (profileDto.getEmail() != null) {
       user.getProfile().setEmail(profileDto.getEmail());
+      }
+      if (profileDto.getPhone() != null) {
       user.getProfile().setPhone(profileDto.getPhone());
-
+      }
       // Save the updated user to the repository.
       User updatedUser = userRepository.save(user);
 
