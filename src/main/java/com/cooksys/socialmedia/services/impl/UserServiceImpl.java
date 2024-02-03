@@ -256,6 +256,10 @@ public class UserServiceImpl implements UserService {
   	  	}
   	  User user = foundUser.get();
   	  
+  	  if(user.isDeleted() == true) {
+  		  throw new NotFoundException("User with this username not found.");
+  	  }
+  	  
   	CredentialsDto checkCred = userRequestDto.getCredentials();
   		if(checkCred == null) {
   			throw new NotAuthorizedException("Not authorized");
