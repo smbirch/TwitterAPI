@@ -16,7 +16,7 @@ public interface UserService {
 
     UserResponseDto deleteUserByUsername(String username, CredentialsDto credentials);
 
-    UserResponseDto unfollowUser(UserRequestDto userToUnfollow);
+    void unfollowUser(String username, CredentialsDto credentials);
 
     List<TweetResponseDto> getTweetsByUsername(String username);
 
