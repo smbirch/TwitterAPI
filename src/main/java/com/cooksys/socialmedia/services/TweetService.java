@@ -31,5 +31,7 @@ public interface TweetService {
     List<TweetResponseDto> getTweetByUserMentions(String username);
 
     List<TweetResponseDto> getTweetReplies(Long id);
+    
+    void postTweetLike(Long id, Credentials credentialsDto);
 
 }

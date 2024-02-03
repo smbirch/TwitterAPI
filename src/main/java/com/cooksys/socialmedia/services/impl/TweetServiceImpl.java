@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -194,8 +195,7 @@ public class TweetServiceImpl implements TweetService {
 	  Tweet finall = current.get();
 	  
 	  List<UserResponseDto> userList = new ArrayList<>();
-	  
-	  for(User u: finall.getLikedByUsers()) {
+	  for(User u: userRepository.findByLikedTweets(finall)) {
 		  if(u.isDeleted()==false) {
 			  userList.add(userMapper.entityToDto(u));
 		  }
@@ -394,6 +394,28 @@ public class TweetServiceImpl implements TweetService {
 	  }
 	  List<Tweet> replies = tweetRepository.findByInReplyToIdAndDeletedFalse(id);
 	    return tweetMapper.entitiesToDtos(replies);
+	    
+  }
+  
+  public void postTweetLike(Long id, Credentials credentialsDto) {
+	  Optional<User> foundUser = userRepository.findByCredentials_Username(credentialsDto.getUsername());
+	  if(foundUser.isEmpty()) {
+	  		throw new NotFoundException("User not found");
+	  	}
+	  User user = foundUser.get();
+      if (!user.getCredentials().getPassword().equals(credentialsDto.getPassword())) {
+          throw new NotAuthorizedException("Not authorized");
+      } 
+      if (!user.getCredentials().getUsername().equals(credentialsDto.getUsername())) {
+          throw new BadRequestException("invalid");
+      }
+	  Optional<Tweet> tweet = tweetRepository.findById(id);
+	  if(tweet.isEmpty() || tweet.get().isDeleted()) {
+		  throw new NotFoundException("Tweet not found");
+	  }
+      user.getLikedTweets().add(tweet.get());
+      userRepository.saveAndFlush(user);
   }
 
+  
 }
