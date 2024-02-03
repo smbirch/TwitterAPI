@@ -382,7 +382,6 @@ public class TweetServiceImpl implements TweetService {
   	current.setContent(tweetRequest.getContent());
   	current.setHashtags(hashtagWords);
   	current.setMentionedUsers(mentionUsers);
-  	System.out.println(userMapper.entityToDto(current.getAuthor()));
   	
   	return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
   }
