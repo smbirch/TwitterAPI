@@ -92,8 +92,8 @@ public class TweetController {
     }
 
     @PostMapping("/{id}/repost")
-    public TweetResponseDto createRepost(@PathVariable("id") Long id, @RequestBody Credentials credentialsDto) {
-        return tweetService.createRepost(id, credentialsDto);
+    public TweetResponseDto createRepost(@PathVariable("id") Long id, @RequestBody CredentialsDto credentials) {
+        return tweetService.createRepost(id, credentials);
     }
 
     @GetMapping("/{id}/context")

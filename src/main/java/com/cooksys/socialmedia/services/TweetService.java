@@ -20,7 +20,7 @@ public interface TweetService {
 
     TweetResponseDto createReply(Long id, TweetRequestDto tweetRequest);
 
-    TweetResponseDto createRepost(Long id, Credentials tweetRequestDto);
+    TweetResponseDto createRepost(Long id, CredentialsDto credentials);
 
     ContextDto getContext(Long id);
 

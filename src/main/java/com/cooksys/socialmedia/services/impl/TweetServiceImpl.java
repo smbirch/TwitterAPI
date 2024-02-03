@@ -88,14 +88,28 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
-    public TweetResponseDto createRepost(Long tweetId, Credentials credentials) {
+    public TweetResponseDto createRepost(Long tweetId, CredentialsDto credentials) {
         Tweet tweet = tweetRepository.findById(tweetId).orElseThrow(() -> new NotFoundException("Invalid tweet ID: " + tweetId));
 
         if (tweet.isDeleted()) {
             throw new NotFoundException("Tweet with ID: " + tweetId + " not found");
         }
+        
+        if(credentials == null || credentials.getUsername() == null || credentials.getPassword() == null) {
+        	throw new BadRequestException("Bad credentials in body.");
+        }
+        
+        Optional <User> credUser = userRepository.findByCredentials_Username(credentials.getUsername());
+        
+        if(credUser.isEmpty()) {
+        	throw new NotFoundException("No user with these credentials was found.");
+        }
+        User credentU = credUser.get();
+        if(!credentialsMapper.entityToDto(credentU.getCredentials()).equals(credentials)) {
+        	throw new NotAuthorizedException("Credentials do not match.");
+        }
         Tweet newTweet = new Tweet();
-        newTweet.setAuthor(tweet.getAuthor());
+        newTweet.setAuthor(credentU);
         newTweet.setRepostOf(tweet);
 
         return tweetMapper.entityToDto((tweetRepository.saveAndFlush(newTweet)));
@@ -321,11 +335,15 @@ public class TweetServiceImpl implements TweetService {
 	  
 	  ArrayList<User> mentionUsers = new ArrayList<User>();
 	  
+	  if(tweetRequest.getContent() == null) {
+		  throw new BadRequestException("No content in tje body.");
+	  }
+	  
 	  String[] words = tweetRequest.getContent().split(" ");
 	  for (String word : words) {
 		  
           if (word.startsWith("#")) {
-        	  hashtagWords.add(createReturnHashtag(word));
+        	  hashtagWords.add(createReturnHashtag(word.substring(1)));
         	  	
           }
         	  if (word.startsWith("@")) {
@@ -339,14 +357,16 @@ public class TweetServiceImpl implements TweetService {
 
   	Tweet current = new Tweet();
   	CredentialsDto credentials = tweetRequest.getCredentials();
-  	
+  	if(credentials == null || credentials.getUsername() == null || credentials.getPassword() == null) {
+  		throw new BadRequestException("Incorrect credential informatio.");
+  	}
   	Optional<User> foundUser = userRepository.findByCredentials_Username(credentials.getUsername());
   	
   	if(foundUser.isEmpty()) {
   		throw new NotAuthorizedException("Credentials are empty.");
   	}
   	CredentialsDto dtoCredentials = credentialsMapper.entityToDto(foundUser.get().getCredentials());
-  	if(dtoCredentials == null) {
+  	if(dtoCredentials == null || dtoCredentials.getUsername() == null || dtoCredentials.getPassword() == null) {
   		throw new BadRequestException("Didn't find user.");
   	}
   	if(!credentials.getUsername().equals(dtoCredentials.getUsername())  ||  !credentials.getPassword().equals(dtoCredentials.getPassword())) {
