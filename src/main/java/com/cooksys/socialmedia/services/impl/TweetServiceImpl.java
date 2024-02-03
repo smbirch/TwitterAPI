@@ -386,13 +386,14 @@ public class TweetServiceImpl implements TweetService {
 	  return tweetMapper.entitiesToDtos(userResults);
   }
   
-//create repo method that is like get tweets by mentioned user 
- // in serviceimpl we need to call this method above
- // and then return the response after converting the entity to dto
- // If no active user with that username exists, an error should be sent in lieu of a response. we have done this and use that
- // we are doing that in the tweet post 
- // this is the second easiest - 2. PATCH users/@{username}
-
- // GET     users/@{username}/mentions
+  @Override
+  public List<TweetResponseDto> getTweetReplies(Long id){
+	  Optional<Tweet> tweet = tweetRepository.findById(id);
+	  if(tweet.isEmpty() || tweet.get().isDeleted()) {
+		  throw new NotFoundException("Tweet not found");
+	  }
+	  List<Tweet> replies = tweetRepository.findByInReplyToIdAndDeletedFalse(id);
+	    return tweetMapper.entitiesToDtos(replies);
+  }
 
 }

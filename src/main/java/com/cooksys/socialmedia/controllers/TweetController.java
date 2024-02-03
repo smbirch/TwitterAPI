@@ -109,5 +109,10 @@ public class TweetController {
 	public List<HashtagResponseDto> retrieveTagsById(@PathVariable("id") Long tweetId) {
 		return tweetService.getTagsByTweetId(tweetId);
 	}
+	
+	@GetMapping("{id}/replies")
+	public List<TweetResponseDto> getRepliesOfTweets(@PathVariable("id") Long id) {
+		return tweetService.getTweetReplies(id);
+	}
 }
 
