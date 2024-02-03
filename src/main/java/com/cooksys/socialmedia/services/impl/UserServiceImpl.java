@@ -72,9 +72,6 @@ public class UserServiceImpl implements UserService {
 
         u.setProfile(userMapper.requestDtoToEntity(userRequestDto).getProfile());
         u.setCredentials(userMapper.requestDtoToEntity(userRequestDto).getCredentials());
-        System.out.println(u.getProfile());
-        System.out.println(u.getCredentials());
-
 
         return userMapper.entityToDto(userRepository.saveAndFlush(u));
     }
@@ -161,9 +158,6 @@ public class UserServiceImpl implements UserService {
     public List<TweetResponseDto> getTweetsByUsername(String username) {
         User thisUser = getUserHelper(username);
         List<Tweet> userTweets = thisUser.getTweets();
-        if (userTweets.isEmpty()) {
-            throw new NotFoundException("This user has no tweets!");
-        }
         userTweets.sort(Comparator.comparing(Tweet::getPosted).reversed());
 
         return tweetMapper.entitiesToDtos(userTweets);

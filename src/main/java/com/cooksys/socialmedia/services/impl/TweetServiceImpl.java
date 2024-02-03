@@ -111,8 +111,13 @@ public class TweetServiceImpl implements TweetService {
         Tweet newTweet = new Tweet();
         newTweet.setAuthor(credentU);
         newTweet.setRepostOf(tweet);
-
-        return tweetMapper.entityToDto((tweetRepository.saveAndFlush(newTweet)));
+        tweetRepository.saveAndFlush(newTweet);
+        
+        credentU.getTweets().add(newTweet);
+        
+        userRepository.flush();
+        
+        return tweetMapper.entityToDto(newTweet);
     }
 
     @Override
@@ -131,11 +136,10 @@ public class TweetServiceImpl implements TweetService {
         getInReplyToHelper(tweetResponseDto, replyTos);
         getRepliesHelper(tweet.getReplies(), replies);
 
-
         context.setTarget(tweetResponseDto);
         context.setBefore(replyTos);
         context.setAfter(replies);
-
+        
         return context;
     }
 
@@ -144,7 +148,7 @@ public class TweetServiceImpl implements TweetService {
         if (t == null) {
             return;
         }
-        replyTos.add(tweetMapper.entityToDto(t));
+        replyTos.add(tweet.getInReplyTo());
         getInReplyToHelper(tweet.getInReplyTo(), replyTos);
     }
 
@@ -248,8 +252,6 @@ public class TweetServiceImpl implements TweetService {
   	
  	String contenter = tweetRequest.getContent();
   	
-  	System.out.println(contenter);
-  	
   	int tracker = 0;
   	boolean starter = false;
   	
@@ -273,9 +275,6 @@ public class TweetServiceImpl implements TweetService {
   	if(starter == true) {
   		special.add(contenter.substring(tracker, contenter.length()));
   	}
-  	
-  	System.out.println(special);
-  	
 
   	current.setAuthor(author);
   	current.setContent(tweetRequest.getContent());
@@ -336,7 +335,7 @@ public class TweetServiceImpl implements TweetService {
 	  ArrayList<User> mentionUsers = new ArrayList<User>();
 	  
 	  if(tweetRequest.getContent() == null) {
-		  throw new BadRequestException("No content in tje body.");
+		  throw new BadRequestException("No content in the body.");
 	  }
 	  
 	  String[] words = tweetRequest.getContent().split(" ");
@@ -358,7 +357,7 @@ public class TweetServiceImpl implements TweetService {
   	Tweet current = new Tweet();
   	CredentialsDto credentials = tweetRequest.getCredentials();
   	if(credentials == null || credentials.getUsername() == null || credentials.getPassword() == null) {
-  		throw new BadRequestException("Incorrect credential informatio.");
+  		throw new BadRequestException("Incorrect credential information.");
   	}
   	Optional<User> foundUser = userRepository.findByCredentials_Username(credentials.getUsername());
   	
@@ -377,68 +376,14 @@ public class TweetServiceImpl implements TweetService {
   	if(tweetRequest.getContent() == null) {
   		throw new BadRequestException("Content needs to be filled in.");
   	}
-
-	String contenter = tweetRequest.getContent();
-  	
-  	System.out.println(contenter);
-  	
-  	int tracker = 0;
-  	boolean starter = false;
-  	
-  	List<String> special = new ArrayList<>();
-  	
-  	for(int i = 0; i < contenter.length(); i++) {
-  		if(contenter.charAt(i) == '#' || contenter.charAt(i) == '@') {
-  			tracker = i;
-  			starter = true;
-  		}
-  		else if(!Character.isLetter(contenter.charAt(i)) && !Character.isDigit(contenter.charAt(i)) && contenter.charAt(i) != '_') {
-  			if(starter == true) {
-  				special.add(contenter.substring(tracker, i));
-  				starter = false;
-  			}
-  			
-  		}
-  		
-  	}
-  	
-  	if(starter == true) {
-  		special.add(contenter.substring(tracker, contenter.length()));
-  	}
-  	
-  	System.out.println(special);
   	
   	
   	current.setAuthor(foundUser.get());
   	current.setContent(tweetRequest.getContent());
   	current.setHashtags(hashtagWords);
   	current.setMentionedUsers(mentionUsers);
+  	System.out.println(userMapper.entityToDto(current.getAuthor()));
   	
-  	for(String u: special) {
-  		if(u.charAt(0) == '#') {
-  			Hashtag h = new Hashtag();
-  			for(Hashtag hasher: hashtagRepository.findAll()) {
-  				if(hasher.getLabel().equals(u.substring(1))) {
-  					h = hasher;
-  				}
-  			}
-  			if(h.getLabel() == null)
-  			{
-  				h.setLabel(u.substring(1));
-  				h.getTweets().add(current);
-  				hashtagRepository.saveAndFlush(h);
-  			}
-  		  	current.getHashtags().add(h);
-  		}
-  		else if(u.charAt(0) == '@') {
-  			String label = u.substring(1, u.length());
-  			for(User use: userRepository.findAll()) {
-  				if(use.getCredentials().getUsername().equals(label) && use.isDeleted() == false) {
-  					current.getMentionedUsers().add(use);
-  				}
-  			}
-  		}
-  	}
   	return tweetMapper.entityToDto(tweetRepository.saveAndFlush(current));
   }
   
