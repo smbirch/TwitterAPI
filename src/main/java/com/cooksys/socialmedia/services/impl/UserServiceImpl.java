@@ -75,11 +75,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto updateUsername(String newUsername) {
-        return null;
-    }
-
-    @Override
     public UserResponseDto deleteUserByUsername(String username, CredentialsDto credentials) {
         User current = new User();
         for (User u : userRepository.findAll()) {
@@ -209,5 +204,34 @@ public class UserServiceImpl implements UserService {
         userToFollow.getFollowers().add(user);
         userRepository.saveAndFlush(userToFollow);
 
+    }
+    
+    @Override
+    public UserResponseDto updateUserProfile(String username, UserRequestDto userRequestDto) {
+  	  Optional<User> foundUser = userRepository.findByCredentials_Username(username);
+  	  if(foundUser.isEmpty()) {
+  		  throw new NotFoundException("User not found");
+  	  	}
+  	  User user = foundUser.get();
+  	  
+  	  if (!user.getCredentials().getPassword().equals(userRequestDto.getCredentials().getPassword())) {
+  		  throw new NotAuthorizedException("Not authorized");
+  	  } 
+  	  if (!user.getCredentials().getUsername().equals(userRequestDto.getCredentials().getUsername())) {
+  		  throw new BadRequestException("invalid");
+        }
+  	 // Update the user's profile information with the provided profile details.
+      ProfileDto profileDto = userRequestDto.getProfile();
+      user.getProfile().setFirstName(profileDto.getFirstName());
+      user.getProfile().setLastName(profileDto.getLastName());
+      user.getProfile().setEmail(profileDto.getEmail());
+      user.getProfile().setPhone(profileDto.getPhone());
+
+      // Save the updated user to the repository.
+      User updatedUser = userRepository.save(user);
+
+      // Convert the updated user entity back to a DTO to return.
+      return userMapper.entityToDto(updatedUser);
+   
     }
 }

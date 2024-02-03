@@ -56,24 +56,6 @@ public class UserController {
     }
 
     /**
-     * Updates the profile of a user with the given username. If no such user exists,
-     * the user is deleted, or the provided credentials do not match the user, an error
-     * should be sent in lieu of a response. In the case of a successful update, the
-     * returned user should contain the updated data.
-     * <p>
-     * Request:
-     * credentials: 'Credentials',
-     * profile: 'Profile'
-     * <p>
-     * Returns:
-     * User
-     */
-    @PatchMapping("/@{username}")
-    public UserResponseDto updateUsername(@PathVariable("username") String newUsername) {
-        return userService.updateUsername(newUsername);
-    }
-
-    /**
      * Deletes a user with the given username. If no such user exists or the provided
      * credentials do not match the user, an error should be sent in lieu of a response.
      * If a user is successfully "deleted", the response should contain the user data
@@ -169,6 +151,10 @@ public class UserController {
     @GetMapping("/@{username}/mentions")
     public List<TweetResponseDto> getTweetsByMentions(@PathVariable("username") String username) {
         return tweetService.getTweetByUserMentions(username);
+    }
+    @PatchMapping("/@{username}")
+    public UserResponseDto updateUser(@PathVariable("username") String username, @RequestBody UserRequestDto userRequestDto) {
+        return userService.updateUserProfile(username, userRequestDto);
     }
 
 }
